@@ -2,12 +2,17 @@
 
 import { GmailMessage, GmailMessagePart, GmailSnipet, GmailThread, GmailThreadListResponse } from "@/types/gmail";
 import { getMailBody } from "@/utils/getMailBody";
-import { ThreadDTO, MailMessageDTO } from "@/features/threads/types";
+import { ThreadDTO, MailMessageDTO, ThreadListResponse } from "@/features/threads/types";
 const GMAIL_API_BASE = 'https://gmail.googleapis.com/gmail/v1';
 
 // スレッドID一覧を取得（messages.list）
-export async function getGmailThreadIds(accessToken: string): Promise<string[]> {
-  const res = await fetch(`${GMAIL_API_BASE}/users/me/messages`, {
+export async function getGmailThreadIds(accessToken: string, maxResults: number = 10, nextPageToken?: string): Promise<ThreadListResponse> {
+  const url = new URL(`${GMAIL_API_BASE}/users/me/messages`);
+  url.searchParams.set('maxResults', maxResults.toString());
+  if (nextPageToken) {
+    url.searchParams.set('pageToken', nextPageToken);
+  }
+  const res = await fetch(url, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
@@ -18,7 +23,10 @@ export async function getGmailThreadIds(accessToken: string): Promise<string[]> 
   const data:GmailThreadListResponse = await res.json();
   const threadIds = data.messages?.map((msg) => msg.threadId) ?? [];
   console.log("threadIds",threadIds);
-  return [...new Set(threadIds)];
+  return {
+    threadIds: [...new Set(threadIds)],
+    nextPageToken: data.nextPageToken,
+  };
 }
 
 // 指定されたスレッドIDのメッセージ一覧を取得（threads.get）
@@ -27,7 +35,7 @@ export async function getGmailMessageByThreadId(accessToken: string, threadId: s
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
-    cache: 'no-store',
+    cache: 'force-cache',
   });
 
   if (!res.ok) throw new Error(`Failed to fetch thread ${threadId}: ${res.statusText}`);
@@ -73,3 +81,4 @@ export async function getGmailMessageById(accessToken: string, messageId: string
   //   console.log("--------------------------------");
   //   console.log("mailBody",mailBody);
   // }
+

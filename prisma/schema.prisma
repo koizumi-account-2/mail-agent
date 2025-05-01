@@ -14,20 +14,59 @@ datasource db {
 }
 
 model Project {
-  id        Int         @id @default(autoincrement())
-  name      String
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  deleteFlg  Boolean    @default(false)
+  id         Int         @id @default(autoincrement())
+  name       String
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  deleteFlg  Boolean     @default(false)
 
-  // リレーションフィールド
-  threads   Thread[] // 1つのProjectに複数のThreadが紐づく
+  // リレーション
+  threads    Thread[]
+  situations Situation[]
+  tasks      Task[]
 }
 
 model Thread {
-  id         String      @id
+  id         String     @id
   subject    String
   projectId  Int
-  project    Project  @relation(fields: [projectId], references: [id])
+  project    Project    @relation(fields: [projectId], references: [id])
   deleteFlg  Boolean    @default(false)
+
+  // リレーション
+  situations Situation[]
+  tasks      Task[]
+}
+
+model Situation {
+  id         Int        @id @default(autoincrement())
+  projectId  Int
+  threadId   String
+  latestMessageId String
+  status     String     // 状況を表す文字列（例：'open', 'closed', 'pending'など）
+  notes      String?    // 補足説明など（任意）
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  deleteFlg  Boolean    @default(false)
+
+  // リレーション
+  project    Project    @relation(fields: [projectId], references: [id])
+  thread     Thread     @relation(fields: [threadId], references: [id])
+}
+
+model Task {
+  id          Int        @id @default(autoincrement())
+  projectId   Int
+  threadId    String
+  title       String
+  description String?
+  dueDate     DateTime?
+  isCompleted Boolean    @default(false)
+  status      String     @default("1") // ← "1"〜"10" などの数字文字列
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  deleteFlg   Boolean    @default(false)
+
+  project     Project    @relation(fields: [projectId], references: [id])
+  thread      Thread     @relation(fields: [threadId], references: [id])
 }

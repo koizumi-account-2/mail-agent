@@ -31,8 +31,10 @@ export async function importThread(
       throw new Error('threadIdが指定されていません')
     }
 
+    console.log("projectId", projectId)
     // プロジェクトが指定されていない場合
     if (!projectId) {
+      console.log("projectIdが指定されていません")
     // まずProjectを作成
       const project = await prisma.project.create({
         data: {

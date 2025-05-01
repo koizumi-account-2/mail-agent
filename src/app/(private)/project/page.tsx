@@ -13,8 +13,7 @@ export default async function ProjectPage() {
           </div>
         ))}
       </div>
-      <Link href={`/project/create`}>0から作成</Link>
-      <Link href={`/project/import`}>インポート</Link>
+      <Link href={`/threads`}>0から作成</Link>
     </div>
   );
 }

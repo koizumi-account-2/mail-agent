@@ -16,6 +16,9 @@ export default async function page() {
       <div>
         <Link href="/threads">スレッド一覧</Link>
       </div>
+      <div>
+        <Link href="/project">プロジェクト一覧</Link>
+      </div>
     </>
   );
 }
