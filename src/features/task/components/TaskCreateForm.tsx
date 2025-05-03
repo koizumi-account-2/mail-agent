@@ -10,7 +10,7 @@ export const TaskCreateForm = ({
 }) => {
   const [inputProjectId, setInputProjectId] = useState(projectId);
   const [inputThreadId, setInputThreadId] = useState(threadId);
-  const [state, formAction] = useActionState(createTaskAction, {
+  const [, formAction] = useActionState(createTaskAction, {
     success: false,
     errors: {},
   });

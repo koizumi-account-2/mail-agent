@@ -14,7 +14,7 @@ export default function MailMessageContainer({
     >
       <div>id:{mailMessage.id}</div>
       <div>subject:{mailMessage.subject}</div>
-      <div>from:{mailMessage.from}</div>
+      <div>from:{mailMessage.sender}</div>
       <div>date:{mailMessage.date}</div>
       <div>content:{mailMessage.content}</div>
     </div>

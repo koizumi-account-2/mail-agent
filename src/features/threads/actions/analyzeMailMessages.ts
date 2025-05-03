@@ -14,7 +14,7 @@ export async function analyzeMailMessages(mailMessages: MailMessageDTO[],
       my_info: "memememememe",
       email_messages: mailMessages.map((mailMessage)=>{
               return {
-                  "sender": mailMessage.from,
+                  "sender": mailMessage.sender,
                   "subject": mailMessage.subject,
                   "content": mailMessage.content,
                   "date": mailMessage.date,

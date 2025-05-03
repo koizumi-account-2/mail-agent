@@ -3,6 +3,7 @@ import { getAllProjects } from "@/features/project/actions/project";
 import Link from "next/link";
 export default async function ProjectPage() {
   const projects = await getAllProjects();
+
   return (
     <div>
       <h1>Project</h1>

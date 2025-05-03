@@ -25,7 +25,7 @@ export const ThreadList = ({
             <br />
             {thread.messages[0].subject}
             <br />
-            {thread.messages[0].from}
+            {thread.messages[0].sender}
             <br />
             {thread.messages[0].date}
             <hr />

@@ -7,7 +7,7 @@ export type MailMessageDTO = {
   id: string;
   snippet: string;
   subject: string;
-  from: string;
+  sender: string;
   date: string;
   content: string;
 };

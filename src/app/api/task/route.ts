@@ -26,9 +26,9 @@ export async function POST(req: Request) {
       status: 201,
       headers: { 'Content-Type': 'application/json' }
     });  
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Task creation failed:", error);
-    return new Response(JSON.stringify({ error: error.message || "Invalid input" }), {
+    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : "Invalid input" }), {
       status: 400,
       headers: { 'Content-Type': 'application/json' }
     });
