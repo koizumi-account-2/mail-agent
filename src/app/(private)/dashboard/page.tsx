@@ -21,6 +21,7 @@ export default async function page() {
       <div>
         <Link href="/project">プロジェクト一覧</Link>
       </div>
+      <p>{session?.accessToken}</p>
     </>
   );
 }
