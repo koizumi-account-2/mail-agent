@@ -1,20 +1,26 @@
 import React from "react";
-import { getAllProjects } from "@/features/project/actions/project";
+import { getProjectsByUserId } from "@/features/project/dao/projectDao";
 import Link from "next/link";
+import { auth } from "@/auth";
+import { ProjectSammaryPresentation } from "@/features/project/components/ProjectSammary/ProjectSammaryPresentation";
+import { Button } from "@/components/ui/button";
 export default async function ProjectPage() {
-  const projects = await getAllProjects();
-
+  const session = await auth();
+  if (!session?.user?.email) {
+    throw new Error("ログインしてください");
+  }
+  const projects = await getProjectsByUserId(session.user.email);
   return (
-    <div>
-      <h1>Project</h1>
+    <div className="flex flex-col gap-4">
+      <h1>あなたのプロジェクト</h1>
       <div>
         {projects.map((project) => (
-          <div key={project.id}>
-            <Link href={`/project/${project.id}`}>{project.name}</Link>
-          </div>
+          <ProjectSammaryPresentation key={project.id} project={project} />
         ))}
       </div>
-      <Link href={`/threads`}>0から作成</Link>
+      <Button>
+        <Link href={`/threads`}>0から作成</Link>
+      </Button>
     </div>
   );
 }

@@ -2,7 +2,8 @@
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { redirect } from "next/navigation"
-
+import { createProject, getProjectById } from "../dao/projectDao"
+import { CreateProjectForm } from "../types"
 type ActionState = {
     success: boolean,
     errors: Record<string, string[]>
@@ -35,18 +36,17 @@ export async function importThread(
     // プロジェクトが指定されていない場合
     if (!projectId) {
       console.log("projectIdが指定されていません")
-    // まずProjectを作成
-      const project = await prisma.project.create({
-        data: {
-          name: `project-${threadId}`,
-        },
-      });
+      // まずProjectを作成
+      const createProjectForm: CreateProjectForm = {
+        name: `project-${threadId}`,
+        userId: email,
+        description: "test"
+      }
+      const project = await createProject(createProjectForm)
       projectIdNum = project.id
     }else{
       // プロジェクトが指定されている場合は存在するか確認
-      const project = await prisma.project.findUnique({
-        where: { id: projectIdNum },
-      });
+      const project = await getProjectById(projectIdNum)
       if (!project) {
         throw new Error(`Project ID ${projectId} does not exist`);
       }

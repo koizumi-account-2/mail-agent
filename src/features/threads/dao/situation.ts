@@ -12,23 +12,41 @@ export async function insertThreadSituation( threadSituation: ThreadSituation) {
     latestMessageId:threadSituation.latestMessageId,
     notes:threadSituation.notes
   }
-  console.log("paramThreadSituation", paramThreadSituation);
   const task = await prisma.situation.create({
     data: paramThreadSituation,
   });
   return task;
 }
-export async function getThreadSituation(projectId: number, threadId: string) {
+export async function getThreadSituation(
+  projectId: number,
+  threadId: string
+): Promise<ThreadSituation> {
   const threadSituation = await prisma.situation.findFirst({
     where: {
       projectId: projectId,
       threadId: threadId,
     },
+    include: {
+      project: true,
+      thread: true,
+    },
     orderBy: {
       updatedAt: "desc",
     },
   });
-  return threadSituation;
+  if (!threadSituation) {
+    return {
+      projectId: projectId,
+      threadId: threadId,
+      status: "",
+      latestMessageId: "",
+      notes: "",
+    };
+  }
+  return {
+    ...threadSituation,
+    notes: threadSituation.notes ?? "",
+  };
 }
 
 export async function getAllSituations() {

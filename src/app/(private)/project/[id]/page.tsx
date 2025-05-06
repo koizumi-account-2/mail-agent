@@ -1,9 +1,10 @@
 import { auth } from "@/auth";
-import { getProjectById } from "@/features/project/actions/project";
-import { ThreadContainer } from "@/features/threads/components/ThreadContainer";
-import { TaskCreateForm } from "@/features/task/components/TaskCreateForm";
+import { getProjectById } from "@/features/project/dao/projectDao";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ThreadSituationContainer } from "@/features/threads/components/situations/ThreadSituationContainer";
+import { TaskContainer } from "@/features/task/components/TaskContainer";
+import { DividedLayout } from "@/components/layout/DividedLayout";
 type Params = {
   params: Promise<{ id: string }>;
 };
@@ -15,31 +16,25 @@ export default async function ProjectPage({ params }: Params) {
     throw new Error("不正なリクエストです");
   }
   const id = resolvedParams.id;
-  const project = await getProjectById(id);
+  const project = await getProjectById(Number(id));
+  console.log(project);
   if (!project) {
     notFound();
   }
-
+  const left = (
+    <>
+      <Link href={`/threads?projectId=${id}`}>Import</Link>
+      状況
+      <ThreadSituationContainer
+        projectId={Number(id)}
+        threadId={project?.threads[0].id}
+      />
+    </>
+  );
+  const right = (
+    <TaskContainer projectId={Number(id)} threadId={project?.threads[0].id} />
+  );
   // threadidを渡すと、threadの情報を表示するようなコンポーネントの作成。
   // その中では、threadの情報を表示する
-  return (
-    <div>
-      <h1>Project: {project?.name}</h1>
-      <div>
-        {project?.threads.map((thread) => (
-          <div key={thread.id}>
-            threadSubject: {thread.subject}
-            <br />
-            threadId: {thread.id}
-            <br />
-            <h2>Task Create</h2>
-            <TaskCreateForm projectId={id} threadId={thread.id} />
-            <hr />
-            <ThreadContainer projectId={id} threadId={thread.id} />
-          </div>
-        ))}
-      </div>
-      <Link href={`/threads?projectId=${id}`}>Import</Link>
-    </div>
-  );
+  return <DividedLayout left={left} right={right} />;
 }
