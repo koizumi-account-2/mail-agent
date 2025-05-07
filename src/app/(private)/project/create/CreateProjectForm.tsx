@@ -1,9 +1,9 @@
 "use client";
-import { createProject } from "@/features/project/actions/project";
+import { createProjectAction } from "@/features/project/actions/project";
 import React, { useActionState, useState } from "react";
 
 export const CreateProjectForm = () => {
-  const [state, formAction] = useActionState(createProject, {
+  const [state, formAction] = useActionState(createProjectAction, {
     success: false,
     errors: {},
   });

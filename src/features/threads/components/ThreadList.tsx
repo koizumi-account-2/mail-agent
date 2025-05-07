@@ -3,7 +3,7 @@
 import { ThreadDTO } from "@/features/threads/types";
 import Link from "next/link";
 import { useState } from "react";
-import { MessageList } from "./MessageList";
+import { MessageList } from "./messages/MessageList";
 // どうしてproject_idを渡すのか？ -> importするときに、projectIdを渡すため
 export const ThreadList = ({
   threads,

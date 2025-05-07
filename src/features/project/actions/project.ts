@@ -1,5 +1,6 @@
 "use server"
-import { prisma } from "@/lib/prisma";
+import { auth } from "@/auth";
+import { createProject } from "../dao/projectDao";
 import { redirect } from "next/navigation";
 
 
@@ -7,31 +8,20 @@ type ActionState = {
     success: boolean,
     errors: Record<string, string[]>
 }
-export async function getAllProjects() {
-  const projects = await prisma.project.findMany({});
-  return projects;
-}
 
-export async function getProjectById(id: string) {
-  const project = await prisma.project.findUnique({
-    where: { id: parseInt(id) },
-    include: {
-      threads: true,
-    },
-  });
-  return project;
-}
 
-export async function createProject(
+export async function createProjectAction(
   prevState: ActionState,
   formData: FormData
 ): Promise<ActionState> {
   const projectName = formData.get("projectName") as string;
+  const session = await auth()
+  const email = session?.user?.email
+  if(!email){
+    throw new Error("ログインしてください")
+  }
   console.log("projectName",projectName);
-const project = await prisma.project.create({
-    data: { name: projectName },
-});
-console.log("project",project);
-redirect(`/project/${project.id}`);
+  const project = await createProject({name: projectName, userId: email, description: ""}) 
+  redirect(`/project/${project.id}`);
 
 }

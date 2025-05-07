@@ -1,6 +1,6 @@
 import React from "react";
-import { MailMessageDTO } from "../types";
-import MailMessageContainer from "./MailMessageContainer";
+import { MailMessageDTO } from "../../types";
+import MailMessagePresentation from "./MailMessagePresentation";
 
 export const MessageList = ({
   mailMessages,
@@ -10,7 +10,10 @@ export const MessageList = ({
   return (
     <div className="flex flex-col gap-4">
       {mailMessages.map((mailMessage) => (
-        <MailMessageContainer key={mailMessage.id} mailMessage={mailMessage} />
+        <MailMessagePresentation
+          key={mailMessage.id}
+          mailMessage={mailMessage}
+        />
       ))}
     </div>
   );

@@ -27,7 +27,7 @@ export async function getGmailMessageByThreadId(accessToken: string, threadId: s
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
-    cache: 'force-cache',
+    cache: 'no-store',
   });
 
   if (!res.ok) throw new Error(`Failed to fetch thread ${threadId}: ${res.statusText}`);
@@ -42,7 +42,7 @@ export async function getGmailMessageById(accessToken: string, messageId: string
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
-    cache: 'no-store',
+    cache: 'force-cache',
   });
 
   if (!res.ok) throw new Error(`Failed to fetch message ${messageId}: ${res.statusText}`);

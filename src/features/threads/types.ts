@@ -24,6 +24,7 @@ export type ThreadSituation = {
   status: string;
   latestMessageId: string;
   notes?: string;
+  updatedAt?: Date;
 };
 
 ///fastapi
@@ -31,10 +32,11 @@ export type ThreadSituation = {
 export type AnalyzeMailMessagesResponse = {
   summary: string;
   tasks: TaskKari[];
+  latest_message_id: string;
 };
 
 //これは仮の型
 export type TaskKari = {
-  taskName: string;
-  assignedTo: string;
+  task_name: string;
+  assigned_to: string;
 };
