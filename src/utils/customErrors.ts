@@ -1,4 +1,7 @@
-export class ApiError<T extends ApiErrorResponse> extends Error {
+
+
+// API層のエラー
+export class ApiError<T> extends Error {
   status: number;
   info: T;
 
@@ -11,8 +14,18 @@ export class ApiError<T extends ApiErrorResponse> extends Error {
 }
 
 // 以下APIごとのエラーの型
-
-export type ApiErrorResponse = {
-  message: string;
+export interface BaseApiErrorResponse {
+    errorType: string;
 };
+export interface ValidationDetail {
+  loc: (string | number)[];
+  msg: string;
+  type: string;
+}
+
+export interface FastApiErrorResponse extends BaseApiErrorResponse {
+    error: string;
+    details?: ValidationDetail[];
+};
+
 
