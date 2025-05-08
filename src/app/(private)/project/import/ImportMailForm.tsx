@@ -11,7 +11,7 @@ export const ImportMailForm = ({
   thread: ThreadDTO;
   projectId: string;
 }) => {
-  const [state, formAction] = useActionState(importThread, {
+  const [, formAction] = useActionState(importThread, {
     success: false,
     errors: {},
   });

@@ -4,10 +4,7 @@ import { FcGoogle } from "react-icons/fc";
 import { googleAuthenticate } from "@/lib/actions/authenticate";
 import { Button } from "@/components/ui/button";
 export default function LoginPage() {
-  const [errorMessage, formAction] = useActionState(
-    googleAuthenticate,
-    undefined
-  );
+  const [, formAction] = useActionState(googleAuthenticate, undefined);
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
       <div className="w-full max-w-md bg-white shadow-xl rounded-2xl p-8 space-y-6">
