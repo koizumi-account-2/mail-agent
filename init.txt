@@ -1,15 +1,4 @@
-cd src
-mkdir components
-cd components
-mkdir common
-mkdir layout
-cd ../
-mkdir features
-mkdir types
-mkdir lib
-mkdir validations
-mkdir utils
-cd app
-mkdir (auth)
-mkdir (public)
-mkdir (private)
+# init prisma
+npx prisma generate
+npx prisma migrate dev --name init
+

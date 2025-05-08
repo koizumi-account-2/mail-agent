@@ -12,7 +12,7 @@ export const CalendarRegisterForm = () => {
   const [value, setValue] = useState("損保ジャパン");
   const [isLoading, setIsLoading] = useState(false);
   const [isLoading2, setIsLoading2] = useState(false);
-  const [eventTrend, setEventTrend] = useState<EventTrend | null>(null);
+  const [, setEventTrend] = useState<EventTrend | null>(null);
   const [companyInfo, setCompanyInfo] = useState<CompanyInfoFullResult | null>(
     null
   );
@@ -57,7 +57,11 @@ export const CalendarRegisterForm = () => {
           name="companyName"
           onChange={(e) => setValue(e.target.value)}
         />
-        <Button type="button" onClick={clickHandler} disabled={isLoading}>
+        <Button
+          type="button"
+          onClick={() => clickHandler()}
+          disabled={isLoading}
+        >
           調査
         </Button>
       </div>

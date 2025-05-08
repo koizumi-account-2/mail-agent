@@ -19,6 +19,7 @@ export const ThreadMessagesPresentation = ({
   const handleDeleteDialogChange = (open: boolean) => {
     setShowDeleteDialog(open);
   };
+  console.log(projectId);
   return (
     // // agentによるanalyzeの呼び出し
     // const handleAnalyze = async () => {
