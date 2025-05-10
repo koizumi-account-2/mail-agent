@@ -47,3 +47,9 @@ export type EventTrend = {
   frequentSlots: FrequentSlot[];
   titlePatterns: string[];
 };
+
+export type CandidateResult = {
+  candidate_days: CandidateDay[];
+  candidate_days_all: CandidateDay[];
+};
+

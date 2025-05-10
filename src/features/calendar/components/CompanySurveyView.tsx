@@ -9,18 +9,33 @@ import { TabItem } from "@/components/common/AppTab";
 import { SkeletonCard } from "@/components/common/skelton/SkeltonCard";
 import { CandidateDay } from "@/features/calendar/types";
 import { CandidateDayView } from "./CandidateDayView";
+import { DateTimePicker24hForm } from "@/components/common/input/DateTimePicker24hForm";
+import { useState } from "react";
 export const CompanySurveyView = ({
   companyInfoFullResult,
   candidateDays,
+  candidateDaysAll,
   isLoading,
   isLoading2,
 }: {
   companyInfoFullResult: CompanyInfoFullResult | null;
   candidateDays: CandidateDay[] | null;
+  candidateDaysAll: CandidateDay[] | null;
   isLoading: boolean;
   isLoading2: boolean;
 }) => {
   console.log(candidateDays?.[0]);
+  const firstCandidateDay = candidateDays?.[0];
+  const [selectedDateList, setSelectedDateList] = useState<Date[]>(
+    firstCandidateDay?.candidates.map((c) => new Date(c.start)) || []
+  );
+  const updatedCandidateDays = (index: number, date: Date) => {
+    if (!selectedDateList.includes(date)) {
+      const newCandidateDays = [...selectedDateList];
+      newCandidateDays[index] = date;
+      setSelectedDateList(newCandidateDays);
+    }
+  };
   const tabItems: TabItem[] = [
     {
       title: "会社情報",
@@ -60,11 +75,17 @@ export const CompanySurveyView = ({
         <>
           {(isLoading2 || !candidateDays) && <SkeletonCard />}
           {!isLoading2 && candidateDays && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {candidateDays.map((day) => (
-                <CandidateDayView key={day.date} candidateDay={day} />
-              ))}
-            </div>
+            <>
+              <SelectedDateList
+                selectedDateList={selectedDateList}
+                updatedCandidateDays={updatedCandidateDays}
+              />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {candidateDaysAll?.map((day) => (
+                  <CandidateDayView key={day.date} candidateDay={day} />
+                ))}
+              </div>
+            </>
           )}
         </>
       ),
@@ -77,5 +98,27 @@ export const CompanySurveyView = ({
         <AppTab defaultTab="1" items={tabItems} />
       </div>
     </>
+  );
+};
+
+const SelectedDateList = ({
+  selectedDateList,
+  updatedCandidateDays,
+}: {
+  selectedDateList: Date[];
+  updatedCandidateDays: (index: number, date: Date) => void;
+}) => {
+  return (
+    <div>
+      {selectedDateList.map((date, index) => (
+        <DateTimePicker24hForm
+          dateValue={date}
+          onChange={(date) => {
+            updatedCandidateDays(index, date);
+          }}
+          key={date.toUTCString()}
+        />
+      ))}
+    </div>
   );
 };
