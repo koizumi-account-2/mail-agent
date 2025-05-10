@@ -1,5 +1,7 @@
 export type ThreadDTO = {
   threadId: string;
+  locationName: string;
+  locationAddress: string;
   messages: MailMessageDTO[];
 };
 
@@ -23,6 +25,7 @@ export type ThreadSituation = {
   threadId: string;
   status: string;
   latestMessageId: string;
+  thread?: ThreadDTO;
   notes?: string;
   updatedAt?: Date;
 };
@@ -33,10 +36,16 @@ export type AnalyzeMailMessagesResponse = {
   summary: string;
   tasks: TaskKari[];
   latest_message_id: string;
+  company_location: ContactPy;
 };
 
 //これは仮の型
 export type TaskKari = {
   task_name: string;
   assigned_to: string;
+};
+
+export type ContactPy = {
+  company_name: string;
+  company_address: string;
 };

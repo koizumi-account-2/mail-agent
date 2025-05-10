@@ -1,10 +1,10 @@
 import { auth } from "@/auth";
 import { getProjectById } from "@/features/project/dao/projectDao";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ThreadSituationContainer } from "@/features/threads/components/situations/ThreadSituationContainer";
 import { TaskContainer } from "@/features/task/components/TaskContainer";
 import { DividedLayout } from "@/components/layout/DividedLayout";
+
 type Params = {
   params: Promise<{ id: string }>;
 };
@@ -23,7 +23,6 @@ export default async function ProjectPage({ params }: Params) {
   }
   const left = (
     <>
-      <Link href={`/threads?projectId=${id}`}>Import</Link>
       状況
       <ThreadSituationContainer
         projectId={Number(id)}

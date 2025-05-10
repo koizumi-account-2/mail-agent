@@ -16,11 +16,11 @@ export const ThreadSituationContainer = async ({
   if (!session?.user?.email || !session?.accessToken) {
     throw new Error("不正なリクエストです");
   }
-  console.log("projectId, threadId", projectId, threadId);
   const threadSituation = await getThreadSituation(projectId, threadId);
   // threadSituation.latestMessageIdを取得 : DB
+  console.log("現在のメールスレッドを取得");
   const thread = await getGmailMessageByThreadId(session.accessToken, threadId);
-  console.log("thread", thread?.messages[0].id);
+  console.log("メールスレッドを取得しました");
   return (
     <ThreadSituationPresentation
       projectId={projectId}

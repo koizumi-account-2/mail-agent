@@ -27,29 +27,6 @@ import { signOut, useSession } from "next-auth/react";
 import { confirm } from "@/utils/confirm";
 export const CustomSideBarFooter = () => {
   const { data: session } = useSession();
-  // const { openConfirmModal } = useConfirmModal();
-  // const auth = useAtomValue(authAtom);
-  // const confirmModal: TConfirmModal = {
-  //   isOpen: true,
-  //   title: "test",
-  //   description: "test",
-  //   execLabel: "test",
-  //   cancelLabel: "test",
-  //   execHandler: async () => {
-  //     console.log("logout");
-  //     await logout();
-  //     console.log("logout2");
-  //     navigate({ to: "/login" });
-  //   },
-  //   cancelHandler: () => {
-  //     console.log("test");
-  //   },
-  // };
-  // const navigate = useNavigate();
-  // const { logout } = useLogin();
-  // const handleLogout = async () => {
-  //   openConfirmModal(confirmModal);
-  // };
   const callLogout = async () => {
     const result = await confirm("本当にログアウトしますか？");
     if (result) {
@@ -92,7 +69,7 @@ export const CustomSideBarFooter = () => {
               <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage src="/icons/fox.png" alt="John Doe" />
+                    <AvatarImage src="/icon/fox.png" alt="John Doe" />
                     <AvatarFallback className="rounded-lg">
                       {session?.user?.name}
                     </AvatarFallback>
