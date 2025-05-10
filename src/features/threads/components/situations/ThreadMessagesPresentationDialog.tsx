@@ -22,7 +22,9 @@ export const ThreadMessagesPresentationDialog = ({
   console.log(projectId);
   return (
     <div>
-      <Button onClick={() => setShowDeleteDialog(true)}>詳細を確認</Button>
+      <Button onClick={() => setShowDeleteDialog(true)}>
+        メールの詳細を確認
+      </Button>
       {showDeleteDialog && (
         <MessagesDialog
           isOpen={showDeleteDialog}

@@ -47,6 +47,7 @@ export async function analyzeMailMessages(
   return data;
 }
 
+
 // data {
 //   tasks: [
 //     { task_name: '当日参加予定のメンバーの名簿を送付する', assigned_to: 'A株式会社 営業部 A' },

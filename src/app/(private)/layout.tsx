@@ -22,9 +22,11 @@ export default function PublicLayout({
         <div className="sticky top-0 z-50 bg-white border-b">
           <SiteHeader />
         </div>
-        <div className="flex-1 overflow-y-auto gap-4 p-2 md:gap-6 md:py-6">
-          {children}
-          <ConfirmDialog />
+        <div className="@container/main flex flex-1 flex-col overflow-y-auto">
+          <div className="flex flex-col gap-2 p-2 md:gap-2 md:py-2 ">
+            {children}
+            <ConfirmDialog />
+          </div>
         </div>
       </SidebarInset>
     </SidebarProvider>

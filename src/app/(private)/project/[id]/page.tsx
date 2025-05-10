@@ -3,8 +3,7 @@ import { getProjectById } from "@/features/project/dao/projectDao";
 import { notFound } from "next/navigation";
 import { ThreadSituationContainer } from "@/features/threads/components/situations/ThreadSituationContainer";
 import { TaskContainer } from "@/features/task/components/TaskContainer";
-import { DividedLayout } from "@/components/layout/DividedLayout";
-
+import { HeaderGroupL } from "@/components/common/header/HeaderGroups";
 type Params = {
   params: Promise<{ id: string }>;
 };
@@ -21,19 +20,19 @@ export default async function ProjectPage({ params }: Params) {
   if (!project) {
     notFound();
   }
-  const left = (
+  // threadidを渡すと、threadの情報を表示するようなコンポーネントの作成。
+  // その中では、threadの情報を表示する
+  return (
     <>
-      状況
+      <HeaderGroupL
+        headerTitle={project.name}
+        headerDescription={project.description}
+      />
       <ThreadSituationContainer
         projectId={Number(id)}
         threadId={project?.threads[0].id}
       />
+      <TaskContainer projectId={Number(id)} threadId={project?.threads[0].id} />
     </>
   );
-  const right = (
-    <TaskContainer projectId={Number(id)} threadId={project?.threads[0].id} />
-  );
-  // threadidを渡すと、threadの情報を表示するようなコンポーネントの作成。
-  // その中では、threadの情報を表示する
-  return <DividedLayout left={left} right={right} />;
 }

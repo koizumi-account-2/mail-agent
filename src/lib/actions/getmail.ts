@@ -42,10 +42,15 @@ export async function getGmailMessageByThreadId(accessToken: string, threadId: s
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
-    cache: 'no-store',
-  } 
-  try{
-    const res = await fetcher<ThreadDTO, FastApiErrorResponse>(url.toString(), requestInit);
+    next: {
+      revalidate: 3 * 60,
+    },
+  };
+  try {
+    const res = await fetcher<ThreadDTO, FastApiErrorResponse>(
+      url.toString(),
+      requestInit
+    );
     return res;
   }catch(error:unknown){
     throw errorHandler(error);

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { CreateProjectForm } from "../types";
+import { CreateProjectForm, ProjectDTO } from "../types";
 
 export const createProject = async (projectForm: CreateProjectForm) => {
   const project = await prisma.project.create({
@@ -18,7 +18,18 @@ export const getProjectById = async (projectId: number) => {
       threads: true,
     },
   });
-  return project;
+  if (!project) {
+    return null;
+  }else{
+    return {
+      id: project.id,
+      name: project.name,
+      userId: project.userId,
+      description: project.description,
+      threads: project.threads,
+    };
+  }
+
 };
 
 export const getProjectsByUserId = async (userId: string) => {
@@ -29,4 +40,15 @@ export const getProjectsByUserId = async (userId: string) => {
     },
   });
   return projects;
+};
+
+export const updateProject = async (projectId: number, projectName: string, projectDescription: string) => {
+  const updatedProject = await prisma.project.update({
+    where: { id: projectId },
+    data: {
+      name: projectName,
+      description: projectDescription,
+    },
+  });
+  return updatedProject;
 };

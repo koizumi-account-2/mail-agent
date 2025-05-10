@@ -20,6 +20,7 @@ export const CompanySurveyView = ({
   isLoading: boolean;
   isLoading2: boolean;
 }) => {
+  console.log(candidateDays?.[0]);
   const tabItems: TabItem[] = [
     {
       title: "会社情報",
@@ -59,7 +60,7 @@ export const CompanySurveyView = ({
         <>
           {(isLoading2 || !candidateDays) && <SkeletonCard />}
           {!isLoading2 && candidateDays && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {candidateDays.map((day) => (
                 <CandidateDayView key={day.date} candidateDay={day} />
               ))}

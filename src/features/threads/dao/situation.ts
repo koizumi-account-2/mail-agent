@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { ThreadSituation } from "../types";
+import { threadId } from "worker_threads";
 
 
 // situationを作成
@@ -31,6 +32,28 @@ export async function insertThreadSituation( threadSituation: ThreadSituation, {
   return task;
 }
 
+export async function updateThreadSituationNoteAndLocation(threadSituation: ThreadSituation, {locationName,locationAddress}:{locationName:string,locationAddress:string}) {
+  const paramThreadSituation={
+    projectId:threadSituation.projectId,
+    threadId:threadSituation.threadId,
+    status:threadSituation.status,
+    latestMessageId:threadSituation.latestMessageId,
+    notes:threadSituation.notes
+  }
+  console.log("paramThreadSituation", paramThreadSituation);
+  await prisma.situation.create({
+    data: paramThreadSituation,
+  });
+  await prisma.thread.update({
+    where: { id: threadSituation.threadId },
+    data: {
+      locationName: locationName,
+      locationAddress: locationAddress,
+    },
+  });
+}
+
+
 export async function getThreadSituation(
   projectId: number,
   threadId: string
@@ -58,20 +81,6 @@ export async function getThreadSituation(
       notes: "",
     };
   }
-  // return {
-  //   projectId: threadSituation.projectId,
-  //   threadId: threadSituation.threadId,
-  //   status: threadSituation.status,
-  //   latestMessageId: threadSituation.latestMessageId,
-  //   thread: {
-  //     threadId: threadSituation.threadId,
-  //     locationName: threadSituation.thread.locationName,
-  //     locationAddress: threadSituation.thread.locationAddress,
-  //     messages: [],
-  //   },
-  //   notes: threadSituation.notes ?? "",
-  //   ...(threadSituation.updatedAt ? { updatedAt: threadSituation.updatedAt } : {}),
-  // };
   return {
     ...threadSituation,
     thread: {
@@ -86,4 +95,11 @@ export async function getThreadSituation(
 export async function getAllSituations() {
   const situations = await prisma.situation.findMany();
   return situations;
+}
+
+export async function getSituationById(id: number) {
+  const situation = await prisma.situation.findUnique({
+    where: { id: id },
+  });
+  return situation;
 }

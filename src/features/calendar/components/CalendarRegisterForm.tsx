@@ -9,6 +9,12 @@ import { CompanySurveyView } from "./CompanySurveyView";
 import { getCandidateDays, getEventTrend } from "@/lib/actions/calendarApi";
 import { EventTrend, CandidateDay } from "@/features/calendar/types";
 import { InputWithLabel } from "@/components/common/input/InputWithLabel";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 export const CalendarRegisterForm = ({
   name,
   address,
@@ -56,29 +62,47 @@ export const CalendarRegisterForm = ({
 
   return (
     <>
-      <div className="space-y-4 flex-col">
-        <InputWithLabel
-          label="会社名"
-          placeholder="入力してください"
-          type="text"
-          id="companyName"
-          value={value}
-          name="companyName"
-          onChange={(e) => setValue(e.target.value)}
-        />
-        <InputWithLabel
-          label="住所"
-          placeholder="入力してください"
-          type="text"
-          value={addressValue}
-          name="companyAddress"
-          onChange={(e) => setAddressValue(e.target.value)}
-          id="companyAddress"
-        />
-      </div>
-      <Button type="button" onClick={() => clickHandler()} disabled={isLoading}>
-        調査
-      </Button>
+      <Accordion
+        type="single"
+        collapsible
+        className="w-full"
+        defaultValue="item-1"
+      >
+        <AccordionItem value="item-1">
+          <AccordionTrigger className="cursor-pointer">
+            検索条件
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="space-y-4 flex-col">
+              <InputWithLabel
+                label="会社名"
+                placeholder="入力してください"
+                type="text"
+                id="companyName"
+                value={value}
+                name="companyName"
+                onChange={(e) => setValue(e.target.value)}
+              />
+              <InputWithLabel
+                label="住所"
+                placeholder="入力してください"
+                type="text"
+                value={addressValue}
+                name="companyAddress"
+                onChange={(e) => setAddressValue(e.target.value)}
+                id="companyAddress"
+              />
+              <Button
+                type="button"
+                onClick={() => clickHandler()}
+                disabled={isLoading}
+              >
+                調査
+              </Button>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
 
       <CompanySurveyView
         companyInfoFullResult={companyInfo}
