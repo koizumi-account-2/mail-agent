@@ -8,8 +8,16 @@ import { CompanyInfoFullResult } from "@/features/company/types";
 import { CompanySurveyView } from "./CompanySurveyView";
 import { getCandidateDays, getEventTrend } from "@/lib/actions/calendarApi";
 import { EventTrend, CandidateDay } from "@/features/calendar/types";
-export const CalendarRegisterForm = () => {
-  const [value, setValue] = useState("損保ジャパン");
+import { InputWithLabel } from "@/components/common/input/InputWithLabel";
+export const CalendarRegisterForm = ({
+  name,
+  address,
+}: {
+  name?: string;
+  address?: string;
+}) => {
+  const [value, setValue] = useState(name || "損保ジャパン");
+  const [addressValue, setAddressValue] = useState(address || "損保ジャパン");
   const [isLoading, setIsLoading] = useState(false);
   const [isLoading2, setIsLoading2] = useState(false);
   const [, setEventTrend] = useState<EventTrend | null>(null);
@@ -23,7 +31,7 @@ export const CalendarRegisterForm = () => {
     setIsLoading(true); // ローディング開始
 
     const [companyInfoResult, eventTrendResult] = await Promise.all([
-      getCompanyInfo(value),
+      getCompanyInfo(value, addressValue),
       getEventTrend(),
     ]);
     setIsLoading(false);
@@ -48,23 +56,29 @@ export const CalendarRegisterForm = () => {
 
   return (
     <>
-      <div className="space-y-4 max-w-md flex">
-        <Input
+      <div className="space-y-4 flex-col">
+        <InputWithLabel
+          label="会社名"
+          placeholder="入力してください"
           type="text"
           id="companyName"
-          placeholder="入力してください"
           value={value}
           name="companyName"
           onChange={(e) => setValue(e.target.value)}
         />
-        <Button
-          type="button"
-          onClick={() => clickHandler()}
-          disabled={isLoading}
-        >
-          調査
-        </Button>
+        <InputWithLabel
+          label="住所"
+          placeholder="入力してください"
+          type="text"
+          value={addressValue}
+          name="companyAddress"
+          onChange={(e) => setAddressValue(e.target.value)}
+          id="companyAddress"
+        />
       </div>
+      <Button type="button" onClick={() => clickHandler()} disabled={isLoading}>
+        調査
+      </Button>
 
       <CompanySurveyView
         companyInfoFullResult={companyInfo}

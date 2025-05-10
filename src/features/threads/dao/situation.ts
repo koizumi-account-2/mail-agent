@@ -3,8 +3,9 @@
 import { prisma } from "@/lib/prisma";
 import { ThreadSituation } from "../types";
 
-// タスクを作成
-export async function insertThreadSituation( threadSituation: ThreadSituation) {
+
+// situationを作成
+export async function insertThreadSituation( threadSituation: ThreadSituation, {locationName,locationAddress}:{locationName:string,locationAddress:string}) {
   const paramThreadSituation={
     projectId:threadSituation.projectId,
     threadId:threadSituation.threadId,
@@ -12,11 +13,24 @@ export async function insertThreadSituation( threadSituation: ThreadSituation) {
     latestMessageId:threadSituation.latestMessageId,
     notes:threadSituation.notes
   }
+
+  console.log("paramThreadSituation", locationName,locationAddress);
+
+
   const task = await prisma.situation.create({
     data: paramThreadSituation,
   });
+  await prisma.thread.update({
+    where: { id: threadSituation.threadId },
+    data: {
+      locationName: locationName,
+      locationAddress: locationAddress,
+    },
+  });
+
   return task;
 }
+
 export async function getThreadSituation(
   projectId: number,
   threadId: string
@@ -34,6 +48,7 @@ export async function getThreadSituation(
       updatedAt: "desc",
     },
   });
+  console.log("threadSituation", threadSituation);
   if (!threadSituation) {
     return {
       projectId: projectId,
@@ -43,10 +58,29 @@ export async function getThreadSituation(
       notes: "",
     };
   }
+  // return {
+  //   projectId: threadSituation.projectId,
+  //   threadId: threadSituation.threadId,
+  //   status: threadSituation.status,
+  //   latestMessageId: threadSituation.latestMessageId,
+  //   thread: {
+  //     threadId: threadSituation.threadId,
+  //     locationName: threadSituation.thread.locationName,
+  //     locationAddress: threadSituation.thread.locationAddress,
+  //     messages: [],
+  //   },
+  //   notes: threadSituation.notes ?? "",
+  //   ...(threadSituation.updatedAt ? { updatedAt: threadSituation.updatedAt } : {}),
+  // };
   return {
     ...threadSituation,
+    thread: {
+      ...threadSituation.thread,
+      messages: [],
+      threadId: threadSituation.threadId,
+    },
     notes: threadSituation.notes ?? "",
-  };
+  }
 }
 
 export async function getAllSituations() {

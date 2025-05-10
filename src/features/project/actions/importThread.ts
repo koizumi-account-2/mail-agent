@@ -57,6 +57,8 @@ export async function importThread(
         id: threadId,
         subject: "test",
         projectId: projectIdNum, // Projectに紐づけ
+        locationName: "",
+        locationAddress: "",
       },
     });
 
