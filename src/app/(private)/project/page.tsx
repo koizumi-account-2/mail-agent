@@ -4,6 +4,7 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import { ProjectSammaryPresentation } from "@/features/project/components/ProjectSammary/ProjectSammaryPresentation";
 import { Button } from "@/components/ui/button";
+import { HeaderGroupL } from "@/components/common/header/HeaderGroups";
 export default async function ProjectPage() {
   const session = await auth();
   if (!session?.user?.email) {
@@ -12,15 +13,18 @@ export default async function ProjectPage() {
   const projects = await getProjectsByUserId(session.user.email);
   return (
     <div className="flex flex-col gap-4">
-      <h1>あなたのプロジェクト</h1>
-      <div>
+      <HeaderGroupL
+        headerTitle="あなたのプロジェクト"
+        headerDescription="プロジェクトを作成して、自分のプロジェクトを管理しましょう。"
+      />
+      <Button>
+        <Link href={`/threads`}>新規作成</Link>
+      </Button>
+      <div className="grid auto-rows-min gap-4 md:grid-cols-2">
         {projects.map((project) => (
           <ProjectSammaryPresentation key={project.id} project={project} />
         ))}
       </div>
-      <Button>
-        <Link href={`/threads`}>0から作成</Link>
-      </Button>
     </div>
   );
 }
