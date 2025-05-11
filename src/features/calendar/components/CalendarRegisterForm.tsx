@@ -16,11 +16,15 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 export const CalendarRegisterForm = ({
+  threadId,
+  projectId,
   name,
   address,
 }: {
+  threadId?: string;
   name?: string;
   address?: string;
+  projectId?: string;
 }) => {
   const [value, setValue] = useState(name || "損保ジャパン");
   const [addressValue, setAddressValue] = useState(address || "損保ジャパン");
@@ -114,6 +118,8 @@ export const CalendarRegisterForm = ({
         isLoading2={isLoading2}
         candidateDays={candidateDays}
         candidateDaysAll={candidateDaysAll}
+        threadId={threadId}
+        projectId={projectId}
       />
     </>
   );

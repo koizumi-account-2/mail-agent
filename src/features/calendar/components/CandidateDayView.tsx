@@ -7,7 +7,7 @@ import { parseISO, format } from "date-fns";
 import { ja } from "date-fns/locale";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { FaRegCalendarAlt } from "react-icons/fa";
+import { FaRegCalendarAlt, FaTrash } from "react-icons/fa";
 import { useState } from "react";
 import DialogWrapper from "@/components/common/DialogWrapper";
 import { EventSlotPicker } from "@/components/common/input/EventSlotPickerPicker";
@@ -65,6 +65,7 @@ export const CandidateDayView = ({
   );
 };
 
+// 候補日の中の時間を表示するコンポーネント
 const CandidateDayRow = ({
   candidateDay,
   eventSlots,
@@ -83,22 +84,28 @@ const CandidateDayRow = ({
   const [showDialog, setShowDialog] = useState(false);
   const start = format(parseISO(eventSlot.start), "HH:mm");
   const end = format(parseISO(eventSlot.end), "HH:mm");
-  const handleSelectEventSlot = (date: Date, eventSlot: EventSlot) => {
-    selectEventSlot(format(date, "yyyy-MM-dd"), eventSlot, true);
+  const handleSelectEventSlot = (newDate: Date, newEventSlot: EventSlot) => {
+    console.log("元々eventSlot", eventSlot);
+    // 元々のeventSlotをfalseにする
+    selectEventSlot(format(candidateDay.date, "yyyy-MM-dd"), eventSlot, false);
+    // 新しいeventSlotをtrueにする
+    selectEventSlot(format(newDate, "yyyy-MM-dd"), newEventSlot, true);
     setShowDialog(false);
   };
   return (
     <div className="flex items-center gap-2">
-      <Checkbox
-        checked={
-          eventSlots
-            ? isIncludedInSelectedEventSlots(eventSlots, eventSlot)
-            : true
-        }
-        onCheckedChange={(v) => {
-          selectEventSlot(candidateDay.date, eventSlot, !!v);
-        }}
-      />
+      {eventSlots && (
+        <Checkbox
+          checked={
+            eventSlots
+              ? isIncludedInSelectedEventSlots(eventSlots, eventSlot)
+              : true
+          }
+          onCheckedChange={(v) => {
+            selectEventSlot(candidateDay.date, eventSlot, !!v);
+          }}
+        />
+      )}
       <div className="border px-3 py-1 rounded bg-gray-50 gap-1">
         {start} ～ {end}
       </div>
@@ -110,6 +117,13 @@ const CandidateDayRow = ({
             onClick={() => setShowDialog(true)}
           >
             <FaRegCalendarAlt />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => selectEventSlot(candidateDay.date, eventSlot, false)}
+          >
+            <FaTrash />
           </Button>
           {showDialog && (
             <DialogWrapper

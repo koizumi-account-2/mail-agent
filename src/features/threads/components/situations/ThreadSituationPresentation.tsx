@@ -62,7 +62,8 @@ export const ThreadSituationPresentation = ({
     );
     if (result) {
       router.push(
-        `/calendar/register?name=${threadSituation.thread?.locationName}&address=${threadSituation.thread?.locationAddress}`
+        // `/calendar/register?name=${threadSituation.thread?.locationName}&address=${threadSituation.thread?.locationAddress}`
+        `/calendar/register?threadId=${threadSituation.threadId}&projectId=${projectId}`
       );
     } else {
       router.push(`/project/${projectId}/edit`);

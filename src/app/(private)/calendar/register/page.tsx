@@ -1,7 +1,9 @@
 import { CalendarRegisterForm } from "@/features/calendar/components/CalendarRegisterForm";
+import { getThreadSituation } from "@/features/threads/dao/situation";
+
 type SearchParams = {
-  name?: string;
-  address?: string;
+  threadId?: string;
+  projectId?: string;
 };
 export default async function CalendarRegisterPage({
   searchParams,
@@ -9,10 +11,19 @@ export default async function CalendarRegisterPage({
   searchParams: Promise<SearchParams>;
 }) {
   const resolvedSearchParams = await searchParams;
+  const threadId = resolvedSearchParams.threadId;
+  const projectId = resolvedSearchParams.projectId;
+
+  const thread =
+    projectId !== undefined && threadId !== undefined
+      ? await getThreadSituation(Number(projectId), threadId)
+      : null;
   return (
     <CalendarRegisterForm
-      name={resolvedSearchParams.name}
-      address={resolvedSearchParams.address}
+      name={thread?.thread?.locationName ?? ""}
+      address={thread?.thread?.locationAddress ?? ""}
+      threadId={threadId}
+      projectId={projectId}
     />
   );
 }
