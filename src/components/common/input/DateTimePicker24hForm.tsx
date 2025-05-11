@@ -19,9 +19,11 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 export function DateTimePicker24hForm({
   dateValue,
   onChange,
+  formatString = "MM/dd/yyyy HH:mm",
 }: {
   dateValue: Date;
   onChange: (date: Date) => void;
+  formatString?: string;
 }) {
   function handleDateSelect(date: Date | undefined) {
     if (date) {
@@ -53,9 +55,9 @@ export function DateTimePicker24hForm({
           )}
         >
           {dateValue ? (
-            format(dateValue, "MM/dd/yyyy HH:mm")
+            format(dateValue, formatString)
           ) : (
-            <span>MM/DD/YYYY HH:mm</span>
+            <span>{formatString}</span>
           )}
           <FaRegCalendarAlt className="ml-auto h-4 w-4 opacity-50" />
         </Button>
@@ -72,7 +74,7 @@ export function DateTimePicker24hForm({
             <ScrollArea className="w-64 sm:w-auto">
               <div className="flex sm:flex-col p-2">
                 {Array.from({ length: 24 }, (_, i) => i)
-                  .reverse()
+                  .filter((hour) => hour >= 9 && hour <= 18)
                   .map((hour) => (
                     <Button
                       key={hour}
@@ -93,7 +95,7 @@ export function DateTimePicker24hForm({
             </ScrollArea>
             <ScrollArea className="w-64 sm:w-auto">
               <div className="flex sm:flex-col p-2">
-                {Array.from({ length: 12 }, (_, i) => i * 30).map((minute) => (
+                {Array.from({ length: 2 }, (_, i) => i * 30).map((minute) => (
                   <Button
                     key={minute}
                     size="icon"
