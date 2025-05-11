@@ -1,39 +1,131 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CandidateDay } from "@/features/calendar/types";
+
+import { CandidateDay, EventSlot } from "@/features/calendar/types";
 import { parseISO, format } from "date-fns";
 import { ja } from "date-fns/locale";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { FaRegCalendarAlt } from "react-icons/fa";
+import { useState } from "react";
+import DialogWrapper from "@/components/common/DialogWrapper";
+import { EventSlotPicker } from "@/components/common/input/EventSlotPickerPicker";
+// eventSlotsの中にeventSlotが含まれているかどうかを返す
+const isIncludedInSelectedEventSlots = (
+  eventSlots: EventSlot[],
+  eventSlot: EventSlot
+) => {
+  const setA = new Set(eventSlots.map((c) => `${c.start}|${c.end}`));
+  return setA.has(`${eventSlot.start}|${eventSlot.end}`);
+};
 
 export const CandidateDayView = ({
   candidateDay,
+  selectEventSlot,
+  contentHeight = "h-[160px]",
+  eventSlots,
 }: {
   candidateDay: CandidateDay;
+  selectEventSlot: (
+    date: string,
+    eventSlot: EventSlot,
+    isChecked: boolean
+  ) => void;
+  contentHeight?: string;
+  eventSlots?: EventSlot[];
 }) => {
-  const displayDate = format(
-    new Date(candidateDay.date),
-    "yyyy年M月d日（EEE）",
-    {
-      locale: ja,
-    }
-  );
+  const displayDate = format(new Date(candidateDay.date), "M月d日（EEE）", {
+    locale: ja,
+  });
 
   return (
-    <Card className="w-full">
+    <Card className="gap-2 py-3">
       <CardHeader>
-        <CardTitle className="text-base font-bold">{displayDate}</CardTitle>
+        <CardTitle className="text-base font-bold text-center">
+          {displayDate}
+        </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-2 text-sm text-gray-700">
-        {candidateDay.candidates.map((c, i) => {
-          const start = format(parseISO(c.start), "HH:mm");
-          const end = format(parseISO(c.end), "HH:mm");
-          return (
-            <div key={i} className="border px-3 py-1 rounded bg-gray-50">
-              {start} ～ {end}
-            </div>
-          );
-        })}
+      <CardContent className={`text-sm text-gray-700 ${contentHeight}`}>
+        <div className="h-full overflow-y-auto flex flex-col gap-1 ">
+          {candidateDay.candidates.map((c, i) => {
+            return (
+              <CandidateDayRow
+                key={i}
+                candidateDay={candidateDay}
+                eventSlots={eventSlots}
+                selectEventSlot={selectEventSlot}
+                eventSlot={c}
+              />
+            );
+          })}
+        </div>
       </CardContent>
     </Card>
+  );
+};
+
+const CandidateDayRow = ({
+  candidateDay,
+  eventSlots,
+  selectEventSlot,
+  eventSlot,
+}: {
+  candidateDay: CandidateDay;
+  eventSlot: EventSlot;
+  selectEventSlot: (
+    date: string,
+    eventSlot: EventSlot,
+    isChecked: boolean
+  ) => void;
+  eventSlots?: EventSlot[];
+}) => {
+  const [showDialog, setShowDialog] = useState(false);
+  const start = format(parseISO(eventSlot.start), "HH:mm");
+  const end = format(parseISO(eventSlot.end), "HH:mm");
+  const handleSelectEventSlot = (date: Date, eventSlot: EventSlot) => {
+    selectEventSlot(format(date, "yyyy-MM-dd"), eventSlot, true);
+    setShowDialog(false);
+  };
+  return (
+    <div className="flex items-center gap-2">
+      <Checkbox
+        checked={
+          eventSlots
+            ? isIncludedInSelectedEventSlots(eventSlots, eventSlot)
+            : true
+        }
+        onCheckedChange={(v) => {
+          selectEventSlot(candidateDay.date, eventSlot, !!v);
+        }}
+      />
+      <div className="border px-3 py-1 rounded bg-gray-50 gap-1">
+        {start} ～ {end}
+      </div>
+      {!eventSlots && (
+        <>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setShowDialog(true)}
+          >
+            <FaRegCalendarAlt />
+          </Button>
+          {showDialog && (
+            <DialogWrapper
+              isOpen={showDialog}
+              onOpenChange={setShowDialog}
+              title="任意の日付を選択"
+            >
+              <EventSlotPicker
+                date={new Date(candidateDay.date)}
+                eventSlot={eventSlot}
+                selectEventSlot={handleSelectEventSlot}
+              />
+            </DialogWrapper>
+          )}
+        </>
+      )}
+    </div>
   );
 };

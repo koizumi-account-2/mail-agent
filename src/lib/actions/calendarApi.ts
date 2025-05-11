@@ -1,7 +1,6 @@
 'use server'
-import { CalendarEventListResponse, CandidateDay } from "@/features/calendar/types";
+import { CalendarEventListResponse, CandidateDay, CandidateResult, EventTrend } from "@/features/calendar/types";
 import { auth } from "@/auth";
-import { EventTrend } from "@/features/calendar/types";
 const fastapi_base = 'http://localhost:8000/api/agent/calendar';
 
 
@@ -80,7 +79,7 @@ export async function getCandidateDays(eventName: string,travelTimeSeconds: numb
     cache: 'force-cache',
   });
   if (!res.ok) throw new Error(`Failed to fetch thread list: ${res.statusText}`);
-  const data:CandidateDay[] = await res.json();
+  const data:CandidateResult = await res.json();
   return data;
 }
 

@@ -9,10 +9,7 @@ import { CustomeCard } from "@/components/common/CustomeCard";
 import { ThreadMessagesPresentationDialog } from "./ThreadMessagesPresentationDialog";
 import { createTasks } from "@/features/task/dao/task";
 import { confirm } from "@/utils/confirm";
-import EditableLabel from "@/components/common/input/Editablelabel";
 import { HeaderGroupS } from "@/components/common/header/HeaderGroups";
-import { HeaderS } from "@/components/common/header/Headers";
-import { DescriptionS } from "@/components/common/header/Descriptions";
 import Link from "next/link";
 export const ThreadSituationPresentation = ({
   projectId,
