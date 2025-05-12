@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CompanyInfoFullResult } from "@/features/company/types";
 import { AppTab } from "@/components/common/AppTab";
 import { TabItem } from "@/components/common/AppTab";
@@ -16,6 +16,7 @@ export const CompanySurveyView = ({
   isLoading2,
   threadId,
   projectId,
+  skey,
 }: {
   companyInfoFullResult: CompanyInfoFullResult | null;
   candidateDays: CandidateDay[] | null;
@@ -24,11 +25,16 @@ export const CompanySurveyView = ({
   isLoading2: boolean;
   threadId?: string;
   projectId?: string;
+  skey?: string;
 }) => {
   const [selectedCandidateDays, setSelectedCandidateDays] = useState<
     CandidateDay[]
   >(candidateDays ?? []);
-
+  useEffect(() => {
+    if (candidateDays) {
+      setSelectedCandidateDays(candidateDays);
+    }
+  }, [candidateDays]);
   const selectEventSlot = (
     date: string,
     eventSlot: EventSlot,
@@ -76,7 +82,7 @@ export const CompanySurveyView = ({
     {
       title: "会社情報",
       value: "1",
-      content: (
+      content: () => (
         <TabCompanyInfo
           isLoading={isLoading}
           companyInfoFullResult={companyInfoFullResult}
@@ -86,7 +92,7 @@ export const CompanySurveyView = ({
     {
       title: "ニュース",
       value: "2",
-      content: (
+      content: () => (
         <ConpamyNews
           isLoading={isLoading}
           companyInfoFullResult={companyInfoFullResult}
@@ -96,7 +102,7 @@ export const CompanySurveyView = ({
     {
       title: "候補日",
       value: "3",
-      content: (
+      content: () => (
         <TabCandidate
           isLoading2={isLoading2}
           selectedCandidateDays={selectedCandidateDays}
@@ -104,6 +110,7 @@ export const CompanySurveyView = ({
           candidateDaysAll={candidateDaysAll ?? []}
           threadId={threadId}
           projectId={projectId}
+          skey={skey}
         />
       ),
     },

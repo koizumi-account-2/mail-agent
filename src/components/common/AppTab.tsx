@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 export type TabItem = {
   title: string;
   value: string;
-  content: React.ReactNode;
+  content: () => React.ReactNode;
 };
 
 interface AppTabProps {
@@ -27,7 +27,7 @@ export const AppTab = ({ defaultTab, items }: AppTabProps) => {
       </TabsList>
       {items.map((item) => (
         <TabsContent value={item.value} key={item.title}>
-          {item.content}
+          {item.content()}
         </TabsContent>
       ))}
     </Tabs>

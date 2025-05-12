@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getCompanyInfo } from "@/lib/actions/company";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CompanyInfoFullResult } from "@/features/company/types";
 import { CompanySurveyView } from "./CompanySurveyView";
 import { getCandidateDays, getEventTrend } from "@/lib/actions/calendarApi";
@@ -15,16 +15,21 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { localStorageUtil } from "@/utils/localStorage";
+import { localStorageCandidateDays } from "@/types/common";
+
 export const CalendarRegisterForm = ({
   threadId,
   projectId,
   name,
   address,
+  skey,
 }: {
   threadId?: string;
   name?: string;
   address?: string;
   projectId?: string;
+  skey?: string;
 }) => {
   const [value, setValue] = useState(name || "損保ジャパン");
   const [addressValue, setAddressValue] = useState(address || "損保ジャパン");
@@ -40,6 +45,15 @@ export const CalendarRegisterForm = ({
   const [candidateDaysAll, setCandidateDaysAll] = useState<
     CandidateDay[] | null
   >(test.candidate_days_all);
+  useEffect(() => {
+    if (skey) {
+      const { getValue } = localStorageUtil<localStorageCandidateDays>(true);
+      const candidateDaysLocalStorage = getValue(skey);
+      if (candidateDaysLocalStorage) {
+        setCandidateDays(candidateDaysLocalStorage.candidateDays);
+      }
+    }
+  }, [skey]);
   const clickHandler = async () => {
     setIsLoading(true); // ローディング開始
 
@@ -120,6 +134,7 @@ export const CalendarRegisterForm = ({
         candidateDaysAll={candidateDaysAll}
         threadId={threadId}
         projectId={projectId}
+        skey={skey}
       />
     </>
   );

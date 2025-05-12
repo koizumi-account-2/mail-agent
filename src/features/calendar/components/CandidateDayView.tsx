@@ -25,15 +25,17 @@ export const CandidateDayView = ({
   selectEventSlot,
   contentHeight = "h-[160px]",
   eventSlots,
+  isShowOnly = false,
 }: {
   candidateDay: CandidateDay;
-  selectEventSlot: (
+  selectEventSlot?: (
     date: string,
     eventSlot: EventSlot,
     isChecked: boolean
   ) => void;
   contentHeight?: string;
   eventSlots?: EventSlot[];
+  isShowOnly?: boolean;
 }) => {
   const displayDate = format(new Date(candidateDay.date), "M月d日（EEE）", {
     locale: ja,
@@ -56,6 +58,7 @@ export const CandidateDayView = ({
                 eventSlots={eventSlots}
                 selectEventSlot={selectEventSlot}
                 eventSlot={c}
+                isShowOnly={isShowOnly}
               />
             );
           })}
@@ -71,10 +74,12 @@ const CandidateDayRow = ({
   eventSlots,
   selectEventSlot,
   eventSlot,
+  isShowOnly,
 }: {
   candidateDay: CandidateDay;
   eventSlot: EventSlot;
-  selectEventSlot: (
+  isShowOnly: boolean;
+  selectEventSlot?: (
     date: string,
     eventSlot: EventSlot,
     isChecked: boolean
@@ -87,14 +92,18 @@ const CandidateDayRow = ({
   const handleSelectEventSlot = (newDate: Date, newEventSlot: EventSlot) => {
     console.log("元々eventSlot", eventSlot);
     // 元々のeventSlotをfalseにする
-    selectEventSlot(format(candidateDay.date, "yyyy-MM-dd"), eventSlot, false);
+    selectEventSlot?.(
+      format(candidateDay.date, "yyyy-MM-dd"),
+      eventSlot,
+      false
+    );
     // 新しいeventSlotをtrueにする
-    selectEventSlot(format(newDate, "yyyy-MM-dd"), newEventSlot, true);
+    selectEventSlot?.(format(newDate, "yyyy-MM-dd"), newEventSlot, true);
     setShowDialog(false);
   };
   return (
     <div className="flex items-center gap-2">
-      {eventSlots && (
+      {eventSlots && !isShowOnly && (
         <Checkbox
           checked={
             eventSlots
@@ -102,14 +111,14 @@ const CandidateDayRow = ({
               : true
           }
           onCheckedChange={(v) => {
-            selectEventSlot(candidateDay.date, eventSlot, !!v);
+            selectEventSlot?.(candidateDay.date, eventSlot, !!v);
           }}
         />
       )}
       <div className="border px-3 py-1 rounded bg-gray-50 gap-1">
         {start} ～ {end}
       </div>
-      {!eventSlots && (
+      {!eventSlots && !isShowOnly && (
         <>
           <Button
             variant="outline"
@@ -121,7 +130,9 @@ const CandidateDayRow = ({
           <Button
             variant="outline"
             size="icon"
-            onClick={() => selectEventSlot(candidateDay.date, eventSlot, false)}
+            onClick={() =>
+              selectEventSlot?.(candidateDay.date, eventSlot, false)
+            }
           >
             <FaTrash />
           </Button>

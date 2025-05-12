@@ -10,6 +10,12 @@ import { CandidateDay, EventSlot } from "../../types";
 import { format } from "date-fns";
 import { confirm } from "@/utils/confirm";
 import { useRouter } from "next/navigation";
+import { localStorageUtil } from "@/utils/localStorage";
+
+type localStorageCandidateDays = {
+  candidateDays: CandidateDay[];
+  threadId: string;
+};
 export const TabCandidate = ({
   isLoading2,
   selectedCandidateDays,
@@ -17,6 +23,7 @@ export const TabCandidate = ({
   candidateDaysAll,
   threadId,
   projectId,
+  skey,
 }: {
   isLoading2: boolean;
   selectedCandidateDays: CandidateDay[];
@@ -28,8 +35,10 @@ export const TabCandidate = ({
   candidateDaysAll: CandidateDay[];
   threadId?: string;
   projectId?: string;
+  skey?: string;
 }) => {
   const router = useRouter();
+  const { setValue } = localStorageUtil<localStorageCandidateDays | null>(true);
   const handleSubmit = async () => {
     const confirmed = await confirm("この内容で決定しますか？");
     if (confirmed) {
@@ -37,14 +46,10 @@ export const TabCandidate = ({
         threadId: threadId ?? "",
         candidateDays: selectedCandidateDays,
       };
+      const key = skey ?? crypto.randomUUID();
       console.log("saveValue", saveValue);
-      localStorage.setItem("CANDIDATE_DAYS", JSON.stringify(saveValue));
-      if (projectId && threadId) {
-        router.push(`/threads/create`);
-      } else {
-        router.push(`/threads/create?threadId=${threadId}`);
-        console.log("threadId", threadId);
-      }
+      setValue(key, saveValue);
+      router.push(`/threads/create?skey=${key}`);
     }
   };
   return (

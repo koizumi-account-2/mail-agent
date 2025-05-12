@@ -1,3 +1,5 @@
+import { CandidateDay } from "@/features/calendar/types";
+
 export type TConfirmModal = {
   title: string;
   isOpen: boolean;
@@ -5,4 +7,9 @@ export type TConfirmModal = {
   execLabel?: string;
   cancelLabel?: string;
   resolve: (result: boolean) => void;
+};
+
+export type localStorageCandidateDays = {
+  candidateDays: CandidateDay[];
+  threadId: string;
 };
