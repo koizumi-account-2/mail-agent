@@ -16,7 +16,10 @@ import {
   CollapsibleTrigger,
 } from "../ui/collapsible";
 import { ChevronRight } from "lucide-react";
-export const CustomSideBarContent = () => {
+import { getProjectsByUserId } from "@/features/project/dao/projectDao";
+import { auth } from "@/auth";
+import { Suspense } from "react";
+export const CustomSideBarContent = async () => {
   const items = [
     {
       title: "スレッド",
@@ -31,6 +34,12 @@ export const CustomSideBarContent = () => {
       url: "/calendar",
     },
   ];
+  const session = await auth();
+  if (!session?.user?.email || !session?.accessToken) {
+    throw new Error("不正なリクエストです");
+  }
+  const userId = session?.user?.email;
+  const myProjects = await getProjectsByUserId(userId);
   return (
     <SidebarContent>
       <SidebarGroup>
@@ -52,21 +61,19 @@ export const CustomSideBarContent = () => {
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton>
-                    SSS
+                    YOUR PROJECTS
                     <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent defaultChecked>
                   <SidebarMenuSub>
-                    <SidebarMenuSubItem>
-                      <Link href="/threads">スレッド</Link>
-                    </SidebarMenuSubItem>
-                    <SidebarMenuSubItem>
-                      <Link href="/threads">スレッド</Link>
-                    </SidebarMenuSubItem>
-                    <SidebarMenuSubItem>
-                      <Link href="/threads">スレッド</Link>
-                    </SidebarMenuSubItem>
+                    {myProjects.map((project) => (
+                      <SidebarMenuSubItem key={project.id}>
+                        <Link href={`/project/${project.id}`}>
+                          {project.name}
+                        </Link>
+                      </SidebarMenuSubItem>
+                    ))}
                   </SidebarMenuSub>
                 </CollapsibleContent>
               </SidebarMenuItem>
