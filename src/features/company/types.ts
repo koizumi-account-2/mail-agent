@@ -28,6 +28,6 @@ export type TravelTimeResult = {
 
 export type CompanyInfoFullResult = {
   company_info: CompanyInfoAnalysisResult; // 企業の基本情報
-  company_news: CompanyNewsAnalysisResult; // 企業のニュース情報
+  company_news: CompanyNewsAnalysisResult | null; // 企業のニュース情報
   travel_time: TravelTimeResult; // ユーザーとの距離情報
 }

@@ -1,5 +1,5 @@
 "use client";
-import { ThreadSituation, ThreadDTO } from "../../types";
+import { ThreadSituation, ThreadDTO } from "../../../types";
 import { useRouter } from "next/navigation";
 import { CustomeCard } from "@/components/common/CustomeCard";
 import EditableLabel from "@/components/common/input/Editablelabel";
@@ -7,7 +7,7 @@ import { HeaderS } from "@/components/common/header/Headers";
 import { DescriptionS } from "@/components/common/header/Descriptions";
 import { Button } from "@/components/ui/button";
 import { useActionState, useState } from "react";
-import { updateThreadSituation } from "../../actions/situationActions";
+import { updateThreadSituation } from "../../../actions/situationActions";
 
 type updateItemName = "companyName" | "companyAddress" | "notes";
 

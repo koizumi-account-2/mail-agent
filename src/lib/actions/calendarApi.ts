@@ -1,5 +1,5 @@
 'use server'
-import { CalendarEventListResponse, CandidateDay, CandidateResult, EventTrend } from "@/features/calendar/types";
+import { CalendarEventListResponse, CandidateDay, CandidateResult, EventTrend, TentativeEvent } from "@/features/calendar/types";
 import { auth } from "@/auth";
 const fastapi_base = 'http://localhost:8000/api/agent/calendar';
 
@@ -15,6 +15,7 @@ export async function getEventList() {
   const res = await fetch(url, {
     headers: {
       Authorization: `Bearer ${session.accessToken}`,
+      email: session.user.email,
     },
     cache: 'no-store',
   });
@@ -33,6 +34,7 @@ export async function getEventTrend() {
   const res = await fetch(url, {
     headers: {
       Authorization: `Bearer ${session.accessToken}`,
+      email: session.user.email,
     },
     cache: 'force-cache',
   });
@@ -46,34 +48,48 @@ export async function getEventTrend() {
   return eventTrend;
 }
 
+type CandidateDaysParams = {
+  eventName: string;
+  travelTimeSeconds: number;
+  eventDuration: number;
+  offset: number;
+  span: number;
+  maxCandidatesPerDay: number;
+  eventTrend: EventTrend;
+}
 
 
-export async function getCandidateDays(eventName: string,travelTimeSeconds: number,eventTrend: EventTrend) {
+// 候補日を取得
+// offset_days:int=2,duration_days:int=7
+export async function getCandidateDays(params: CandidateDaysParams) {
   const session = await auth();
   if (!session?.user?.email || !session?.accessToken) {
     throw new Error("不正なリクエストです");
   }
-  console.log("eventTrend", eventTrend);
   const url = new URL(`${fastapi_base}/candidates`);
+  url.searchParams.set("offset_days", params.offset.toString());
+  url.searchParams.set("duration_days", params.span.toString());
+  url.searchParams.set("max_candidates_per_day", params.maxCandidatesPerDay.toString());
   const param = {
     insert_event: {
-      duration: 6,
-      summary: eventName,
+      duration: params.eventDuration,
+      summary: params.eventName,
       participants: ["me"],
     },
     trend: {
-      busy_slots: eventTrend.busySlots,
-      frequent_slots: eventTrend.frequentSlots,
-      title_patterns: eventTrend.titlePatterns,
+      busy_slots: params.eventTrend.busySlots,
+      frequent_slots: params.eventTrend.frequentSlots,
+      title_patterns: params.eventTrend.titlePatterns,
     },
-    travel_time_seconds: travelTimeSeconds,
+    travel_time_seconds: params.travelTimeSeconds,
   }
-  console.log("param", param);
+  console.log("param", param,"url",url.toString());
   const res = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${session.accessToken}`,
+      email: session.user.email,
     },
     body: JSON.stringify(param),
     cache: 'force-cache',
@@ -90,3 +106,35 @@ export async function getCandidateDays(eventName: string,travelTimeSeconds: numb
   //   console.log("mailBody",mailBody);
   // }
 
+export async function createTentativeEvents(tentativeEvent: TentativeEvent) {
+  const session = await auth();
+  if (!session?.user?.email || !session?.accessToken) {
+    throw new Error("不正なリクエストです");
+  }
+
+  const param = {
+    candidate_days: tentativeEvent.candidate_days,
+    event_name: tentativeEvent.event_name,
+    thread_id: tentativeEvent.thread_id,
+  }
+  // class CalendarEventDTO(BaseModel):
+  //   id: Optional[str] = None
+  //   status: str
+  //   summary: str
+  //   start: EventTime
+  //   recurrence: Optional[List[str]] = None
+  const url = new URL(`${fastapi_base}/tentative`);
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${session.accessToken}`,
+      email: session.user.email,
+    },
+    body: JSON.stringify(param),
+    cache: 'force-cache',
+  });
+  if (!res.ok) throw new Error(`Failed to fetch thread list: ${res.statusText}`);
+  const data = await res.json();
+  return data;
+}

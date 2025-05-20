@@ -1,5 +1,5 @@
 'use server'
-import { ThreadDTO, ThreadListResponse } from "@/features/threads/types";
+import { MailThreadDTO, ThreadDTO, ThreadListResponse } from "@/features/threads/types";
 import { ApiError, FastApiErrorResponse } from "@/utils/customErrors";
 import { fetcher } from "@/utils/fetcher";
 const fastapi_base = 'http://localhost:8000/api';
@@ -15,7 +15,7 @@ const errorHandler = (error:unknown):Error => {
 }
 
 // スレッドID一覧を取得（messages.list）
-export async function getGmailThreadIds(accessToken: string, maxResults: number = 10, nextPageToken?: string): Promise<ThreadListResponse> {
+export async function getGmailThreadIds(accessToken: string, email:string, maxResults: number = 10, nextPageToken?: string): Promise<ThreadListResponse> {
   const url = new URL(`${fastapi_base}/auth/mail/threads`);
   url.searchParams.set('maxResults', maxResults.toString());
   if (nextPageToken) {
@@ -24,6 +24,8 @@ export async function getGmailThreadIds(accessToken: string, maxResults: number 
   const requestInit:RequestInit = {
     headers: {
       Authorization: `Bearer ${accessToken}`,
+      email: email,
+      'Content-Type': 'application/json',
     },
     cache: 'no-store',
   } 
@@ -36,18 +38,21 @@ export async function getGmailThreadIds(accessToken: string, maxResults: number 
 }
 
 // 指定されたスレッドIDのメッセージ一覧を取得（threads.get）
-export async function getGmailMessageByThreadId(accessToken: string, threadId: string): Promise<ThreadDTO> {
+// TODO ThreadDTOの型を変更する DBとmailで使ってる方が同じになっている
+export async function getGmailMessageByThreadId(accessToken: string, email:string, threadId: string): Promise<MailThreadDTO> {
   const url = new URL(`${fastapi_base}/auth/mail/threads/${threadId}`);
   const requestInit:RequestInit = {
     headers: {
       Authorization: `Bearer ${accessToken}`,
+      email: email,
+      'Content-Type': 'application/json',
     },
     next: {
       revalidate: 3 * 60,
     },
   };
   try {
-    const res = await fetcher<ThreadDTO, FastApiErrorResponse>(
+    const res = await fetcher<MailThreadDTO, FastApiErrorResponse>(
       url.toString(),
       requestInit
     );
@@ -58,11 +63,13 @@ export async function getGmailMessageByThreadId(accessToken: string, threadId: s
 }
 
 // メッセージID単位で本文を取得（messages.get）
-export async function getGmailMessageById(accessToken: string, messageId: string) {
+export async function getGmailMessageById(accessToken: string, email:string, messageId: string) {
   const url = new URL(`${fastapi_base}/auth/mail/messages/${messageId}`);
   const requestInit:RequestInit = {
     headers: {
       Authorization: `Bearer ${accessToken}`,
+      email: email,
+      'Content-Type': 'application/json',
     },
     cache: 'force-cache',
   } 

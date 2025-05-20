@@ -1,5 +1,3 @@
-
-
 // API層のエラー
 export class ApiError<T> extends Error {
   status: number;

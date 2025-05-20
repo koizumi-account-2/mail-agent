@@ -25,7 +25,11 @@ export default async function ProjectImportPage({
   if (!threadId) {
     throw new Error("idが指定されていません");
   }
-  const thread = await getGmailMessageByThreadId(session.accessToken, threadId);
+  const thread = await getGmailMessageByThreadId(
+    session.accessToken,
+    session.user.email,
+    threadId
+  );
   console.log(thread);
   return (
     <div>

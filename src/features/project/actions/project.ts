@@ -37,5 +37,5 @@ export async function updateProjectAction(
   console.log("projectDescription", projectDescription);
   console.log("projectId", projectId);
   await updateProject(Number(projectId), projectName, projectDescription)
-  redirect(`/project/${projectId}/edit`);
+  redirect(`/project/${projectId}`);
 }

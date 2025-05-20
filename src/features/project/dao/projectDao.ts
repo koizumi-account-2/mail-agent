@@ -11,7 +11,7 @@ export async function getAllProjects() {
   const projects = await prisma.project.findMany({});
   return projects;
 }
-export const getProjectById = async (projectId: number) => {
+export const getProjectById = async (projectId: number): Promise<ProjectDTO | null> => {
   const project = await prisma.project.findUnique({
     where: { id: projectId },
     include: {
@@ -43,6 +43,12 @@ export const getProjectsByUserId = async (userId: string) => {
 };
 
 export const updateProject = async (projectId: number, projectName: string, projectDescription: string) => {
+  const project = await prisma.project.findUnique({
+    where: { id: projectId },
+  });
+  if (!project) {
+    throw new Error("プロジェクトが見つかりません");
+  }
   const updatedProject = await prisma.project.update({
     where: { id: projectId },
     data: {

@@ -53,3 +53,10 @@ export type CandidateResult = {
   candidate_days_all: CandidateDay[];
 };
 
+export type TentativeEvent = {
+  candidate_days: CandidateDay[];
+  thread_id: string;
+  travel_time_minutes: number;
+  event_duration_minutes: number;
+  event_name: string;
+}

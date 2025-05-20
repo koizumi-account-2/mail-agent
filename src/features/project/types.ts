@@ -1,3 +1,5 @@
+import { ThreadDTO } from "../threads/types";
+
 export type CreateProjectForm = {
   name: string;
   userId: string;
@@ -10,4 +12,5 @@ export type ProjectDTO = {
   name: string;
   userId: string;
   description: string;
+  threads: ThreadDTO[];
 };

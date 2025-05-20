@@ -1,3 +1,4 @@
+"use client"
 export const localStorageUtil = <T>(isDebug: boolean = false) => {
     const getValue = (key: string): T | null => {
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { ThreadDTO } from "@/features/threads/types";
+import { MailThreadDTO } from "@/features/threads/types";
 import Link from "next/link";
 import { useState } from "react";
 import { MessageList } from "./messages/MessageList";
@@ -9,7 +9,7 @@ export const ThreadList = ({
   threads,
   projectId,
 }: {
-  threads: ThreadDTO[];
+  threads: MailThreadDTO[];
   projectId: string | undefined;
 }) => {
   const [selectedThreadId, setSelectedThreadId] = useState<string>("");
@@ -18,10 +18,8 @@ export const ThreadList = ({
     <div className="flex w-full h-screen">
       <div className="w-1/2  p-4">
         {threads.map((thread) => (
-          <div key={thread.threadId}>
-            <button onClick={() => setSelectedThreadId(thread.threadId)}>
-              詳細
-            </button>
+          <div key={thread.id}>
+            <button onClick={() => setSelectedThreadId(thread.id)}>詳細</button>
             <br />
             {thread.messages[0].subject}
             <br />
@@ -47,7 +45,7 @@ export const ThreadList = ({
             <div>
               <MessageList
                 mailMessages={
-                  threads.find((thread) => thread.threadId === selectedThreadId)
+                  threads.find((thread) => thread.id === selectedThreadId)
                     ?.messages ?? []
                 }
               />

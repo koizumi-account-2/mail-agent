@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { getProjectById } from "../../dao/projectDao";
-import { ProjectEditPresentation } from "./ProjectEditPresentation";
-import { ThreadSituationContainer } from "@/features/threads/components/situations/ThreadSituationContainer";
+import { ProjectEditCard } from "./ProjectEditCard";
 export const ProjectContainer = async ({
   projectId,
 }: {
@@ -13,12 +12,7 @@ export const ProjectContainer = async ({
   }
   return (
     <>
-      <ProjectEditPresentation project={project} />
-      <ThreadSituationContainer
-        projectId={projectId}
-        threadId={project?.threads[0].id}
-        isEdit={true}
-      />
+      <ProjectEditCard project={project} />
     </>
   );
 };

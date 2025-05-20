@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { MailMessageDTO, ThreadDTO } from "../../types";
+import { MailMessageDTO, MailThreadDTO } from "../../types";
 import MailMessagePresentation from "../messages/MailMessagePresentation";
 import MessagesDialog from "../messages/MessagesDialog";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ export const ThreadMessagesPresentationDialog = ({
   thread,
 }: {
   projectId: number;
-  thread: ThreadDTO;
+  thread: MailThreadDTO;
 }) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const handleDeleteDialogChange = (open: boolean) => {

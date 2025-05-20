@@ -1,6 +1,6 @@
 "use server"
 import { redirect } from "next/navigation"
-import { getSituationById,updateThreadSituationNoteAndLocation } from "../dao/situation"
+import { getSituationById,insertThreadSituation } from "../dao/situation"
 import { ThreadSituation } from "../types"
 type ActionState = {
     success: boolean,
@@ -15,14 +15,8 @@ export async function updateThreadSituation(
     formData: FormData
 ): Promise<ActionState>{
     const threadSituationId = formData.get('threadSituationId') as string
-    const projectId = formData.get('projectId') as string
-    const companyName = formData.get('companyName') as string
-    const companyAddress = formData.get('companyAddress') as string
     const notes = formData.get('notes') as string
     console.log("threadSituationId", threadSituationId)
-    console.log("projectId", projectId)
-    console.log("companyName", companyName)
-    console.log("companyAddress", companyAddress)
     console.log("notes", notes)
     const threadSituation = await getSituationById(Number(threadSituationId))
     if(!threadSituation){
@@ -33,7 +27,7 @@ export async function updateThreadSituation(
         ...threadSituation,
         notes:notes,
     }
-    await updateThreadSituationNoteAndLocation(updatedSituation, {locationName:companyName,locationAddress:companyAddress})
+    await insertThreadSituation(updatedSituation)
 
-    redirect(`/project/${projectId}`)
+    redirect(`/project/${threadSituation.projectId}/${threadSituation.threadId}/situation`)
 }

@@ -5,7 +5,7 @@ import {
 } from "@/lib/actions/getmail";
 import { ThreadList } from "@/features/threads/components/ThreadList";
 import React from "react";
-import { ThreadDTO } from "@/features/threads/types";
+import { MailThreadDTO } from "@/features/threads/types";
 // projectIdを渡すと、そのプロジェクトに紐づける
 type SearchParams = {
   projectId?: string;
@@ -21,11 +21,18 @@ export default async function ThreadsPage({
   if (!session?.user?.email || !session?.accessToken) {
     throw new Error("不正なリクエストです");
   }
-  const threadList = await getGmailThreadIds(session.accessToken);
+  const threadList = await getGmailThreadIds(
+    session.accessToken,
+    session.user.email
+  );
   console.log("threadList", threadList);
-  const threads: ThreadDTO[] = await Promise.all(
+  const threads: MailThreadDTO[] = await Promise.all(
     threadList.threadIds.map((id) =>
-      getGmailMessageByThreadId(session.accessToken, id)
+      getGmailMessageByThreadId(
+        session.accessToken,
+        session.user?.email ?? "",
+        id
+      )
     )
   );
   return (

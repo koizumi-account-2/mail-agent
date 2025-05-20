@@ -4,10 +4,13 @@ import CompanyArticle from "./CompanyArticle";
 import { CompanyNewsAnalysisResult, NewsArticle } from "../../types";
 
 type CompanyNewsViewProps = {
-  companyNews: CompanyNewsAnalysisResult;
+  companyNews: CompanyNewsAnalysisResult | null;
 };
 
 export default function CompanyNewsView({ companyNews }: CompanyNewsViewProps) {
+  if (!companyNews) {
+    return <div>ニュースがありません</div>;
+  }
   const left = <NewsArticleList newsArticles={companyNews.positive_news} />;
   const right = <NewsArticleList newsArticles={companyNews.negative_news} />;
   return (

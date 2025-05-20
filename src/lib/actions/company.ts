@@ -3,7 +3,7 @@ import { CompanyInfoFullResult } from "@/features/company/types";
 const fastapi_base = 'http://localhost:8000/api/agent/company';
 
 // スレッドID一覧を取得（messages.list）
-export async function getCompanyInfo(companyName: string, address: string) {
+export async function getCompanyInfo(companyName: string, address: string, isIncludeNews: boolean) {
   const url = new URL(fastapi_base);
 
     const userInfo= {
@@ -13,6 +13,7 @@ export async function getCompanyInfo(companyName: string, address: string) {
         company_name: companyName,
         user_info: userInfo,
         company_address: address,
+        is_include_news: isIncludeNews,
     }
     console.log("param",param)
   const res = await fetch(url, {

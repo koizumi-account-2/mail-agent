@@ -5,9 +5,9 @@ import { CompanyInfoFullResult } from "@/features/company/types";
 import { AppTab } from "@/components/common/AppTab";
 import { TabItem } from "@/components/common/AppTab";
 import { CandidateDay, EventSlot } from "@/features/calendar/types";
-import { TabCandidate } from "./tabContent/TabCandidate";
-import { ConpamyNews } from "./tabContent/ConpamyNews";
-import { TabCompanyInfo } from "./tabContent/TabCompanyInfo";
+import { TabCandidate } from "../components/tabContent/TabCandidate";
+import { ConpamyNews } from "./ConpamyNews";
+import { TabCompanyInfo } from "./TabCompanyInfo";
 export const CompanySurveyView = ({
   companyInfoFullResult,
   candidateDays,
@@ -89,19 +89,10 @@ export const CompanySurveyView = ({
         />
       ),
     },
-    {
-      title: "ニュース",
-      value: "2",
-      content: () => (
-        <ConpamyNews
-          isLoading={isLoading}
-          companyInfoFullResult={companyInfoFullResult}
-        />
-      ),
-    },
+
     {
       title: "候補日",
-      value: "3",
+      value: "2",
       content: () => (
         <TabCandidate
           isLoading2={isLoading2}
@@ -111,6 +102,16 @@ export const CompanySurveyView = ({
           threadId={threadId}
           projectId={projectId}
           skey={skey}
+        />
+      ),
+    },
+    {
+      title: "ニュース",
+      value: "3",
+      content: () => (
+        <ConpamyNews
+          isLoading={isLoading}
+          companyInfoFullResult={companyInfoFullResult}
         />
       ),
     },

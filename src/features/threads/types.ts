@@ -1,7 +1,12 @@
 export type ThreadDTO = {
-  threadId: string;
+  id: string;
+  subject?: string;
   locationName: string;
   locationAddress: string;
+};
+
+export type MailThreadDTO = {
+  id: string;
   messages: MailMessageDTO[];
 };
 

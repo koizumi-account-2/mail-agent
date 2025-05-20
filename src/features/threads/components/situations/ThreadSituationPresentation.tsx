@@ -1,5 +1,5 @@
 "use client";
-import { ThreadSituation, ThreadDTO } from "../../types";
+import { ThreadSituation, MailThreadDTO } from "../../types";
 import { Button } from "@/components/ui/button";
 import { analyzeMailMessages } from "../../actions/analyzeMailMessages";
 import { insertThreadSituation } from "../../dao/situation";
@@ -11,6 +11,7 @@ import { createTasks } from "@/features/task/dao/task";
 import { confirm } from "@/utils/confirm";
 import { HeaderGroupS } from "@/components/common/header/HeaderGroups";
 import Link from "next/link";
+import { InputWithLabel } from "@/components/common/input/InputWithLabel";
 export const ThreadSituationPresentation = ({
   projectId,
   threadSituation,
@@ -18,10 +19,12 @@ export const ThreadSituationPresentation = ({
 }: {
   projectId: number;
   threadSituation: ThreadSituation;
-  thread: ThreadDTO;
+  thread: MailThreadDTO;
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+
+  const [name, setName] = useState(threadSituation.thread?.locationName ?? "");
   const updateSituation = useCallback(async () => {
     setIsLoading(true);
     const response = await analyzeMailMessages(threadSituation);
@@ -81,20 +84,12 @@ export const ThreadSituationPresentation = ({
           <div className="flex flex-col gap-2">
             {threadSituation.latestMessageId ? (
               <CustomeCard title="スレッドの状況" description="">
-                <div className="flex justify-between">
-                  <HeaderGroupS
-                    headerTitle={threadSituation?.thread?.locationName ?? ""}
-                    headerDescription={
-                      threadSituation?.thread?.locationAddress ?? ""
-                    }
-                  />
-                  <div>
-                    <p>
-                      {isLatest ? "最新の状態です" : "更新情報があります"}
-                      <br />
-                      最終更新：{threadSituation.updatedAt?.toLocaleString()}
-                    </p>
-                  </div>
+                <div>
+                  <p>
+                    {isLatest ? "最新の状態です" : "更新情報があります"}
+                    <br />
+                    最終更新：{threadSituation.updatedAt?.toLocaleString()}
+                  </p>
                 </div>
                 <>
                   <div className="y-1">
@@ -104,7 +99,7 @@ export const ThreadSituationPresentation = ({
                       </div>
                     ))}
                   </div>
-                  <div className="flex justify-between gap-2">
+                  {/* <div className="flex justify-between gap-2">
                     <div className="flex gap-2">
                       <ThreadMessagesPresentationDialog
                         thread={thread}
@@ -119,7 +114,7 @@ export const ThreadSituationPresentation = ({
                       </Link>
                       <Button onClick={handleUpdateSituation}>AI更新</Button>
                     </div>
-                  </div>
+                  </div> */}
                 </>
               </CustomeCard>
             ) : (

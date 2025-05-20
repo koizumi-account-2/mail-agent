@@ -4,8 +4,13 @@ export const authConfig = {
   pages: {
     signIn: '/login',
   },
+  session: {
+    strategy: 'jwt', // または 'database'
+    maxAge: 60 * 60 * 1, // 秒単位。ここでは30日
+  },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
+      console.log("auth", auth);
       const isLoggedIn = !!auth?.user;
       const isOnDashboard = nextUrl.pathname.startsWith('/dashboard') 
       || nextUrl.pathname.startsWith('/manage')

@@ -1,21 +1,21 @@
 "use client";
 import { importThread } from "@/features/project/actions/importThread";
 import React, { useActionState, useState } from "react";
-import { ThreadDTO } from "@/features/threads/types";
+import { MailThreadDTO } from "@/features/threads/types";
 // projectIdを渡すと、そのプロジェクトに紐づける
 // 渡さなければ、プロジェクトも新規作成
 export const ImportMailForm = ({
   thread,
   projectId,
 }: {
-  thread: ThreadDTO;
+  thread: MailThreadDTO;
   projectId: string;
 }) => {
   const [, formAction] = useActionState(importThread, {
     success: false,
     errors: {},
   });
-  const [threadId, setThreadId] = useState(thread.threadId);
+  const [threadId, setThreadId] = useState(thread.id);
   const [inputProjectId, setInputProjectId] = useState(projectId);
   return (
     <form action={formAction}>

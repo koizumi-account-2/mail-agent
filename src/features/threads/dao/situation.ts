@@ -2,11 +2,10 @@
 
 import { prisma } from "@/lib/prisma";
 import { ThreadSituation } from "../types";
-import { threadId } from "worker_threads";
 
 
 // situationを作成
-export async function insertThreadSituation( threadSituation: ThreadSituation, {locationName,locationAddress}:{locationName:string,locationAddress:string}) {
+export async function insertThreadSituation( threadSituation: ThreadSituation) {
   const paramThreadSituation={
     projectId:threadSituation.projectId,
     threadId:threadSituation.threadId,
@@ -15,44 +14,11 @@ export async function insertThreadSituation( threadSituation: ThreadSituation, {
     notes:threadSituation.notes
   }
 
-  console.log("paramThreadSituation", locationName,locationAddress);
-
-
-  const task = await prisma.situation.create({
+  const situation = await prisma.situation.create({
     data: paramThreadSituation,
   });
-  await prisma.thread.update({
-    where: { id: threadSituation.threadId },
-    data: {
-      locationName: locationName,
-      locationAddress: locationAddress,
-    },
-  });
-
-  return task;
+  return situation;
 }
-
-export async function updateThreadSituationNoteAndLocation(threadSituation: ThreadSituation, {locationName,locationAddress}:{locationName:string,locationAddress:string}) {
-  const paramThreadSituation={
-    projectId:threadSituation.projectId,
-    threadId:threadSituation.threadId,
-    status:threadSituation.status,
-    latestMessageId:threadSituation.latestMessageId,
-    notes:threadSituation.notes
-  }
-  console.log("paramThreadSituation", paramThreadSituation);
-  await prisma.situation.create({
-    data: paramThreadSituation,
-  });
-  await prisma.thread.update({
-    where: { id: threadSituation.threadId },
-    data: {
-      locationName: locationName,
-      locationAddress: locationAddress,
-    },
-  });
-}
-
 
 export async function getThreadSituation(
   projectId: number,
@@ -72,6 +38,9 @@ export async function getThreadSituation(
     },
   });
   console.log("threadSituation", threadSituation);
+
+
+
   if (!threadSituation) {
     return {
       projectId: projectId,

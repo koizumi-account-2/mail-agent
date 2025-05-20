@@ -2,6 +2,8 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { authConfig } from "./auth.config";
+import { initializeUser } from "./lib/actions/user";
+
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -20,6 +22,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
+    async signIn({ user, account, profile, email, credentials }) {
+      console.log("User signed in:", user, account, profile, email, credentials);
+      if (account?.refresh_token && user?.email) {
+        await initializeUser(user?.email, account?.refresh_token);
+      }
+      return true;
+    },
     async jwt({ token, user, account }) {
       if (user && account?.id_token) {
         token.idToken = account.id_token;
@@ -27,11 +36,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (account?.access_token) {
         token.accessToken = account.access_token;
       }
+      if (account?.refresh_token) {
+        token.refreshToken = account.refresh_token;
+      }
       return token;
     },
     async session({ token, session }) {
       session.idToken = token.idToken;
       session.accessToken = token.accessToken;
+      session.refreshToken = token.refreshToken;
       return session;
     },
   },

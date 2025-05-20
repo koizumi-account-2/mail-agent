@@ -8,7 +8,7 @@ export default async function CalendarPage() {
 
   return (
     <>
-      <Link href="/calendar/register">
+      <Link href="/calendar/candidate">
         <Button>新規作成</Button>
       </Link>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
