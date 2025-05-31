@@ -8,13 +8,19 @@ import { useThreadSituationForm } from "../../hooks/useThreadSituationFormHook";
 import { MailThreadDTO, ThreadSituation } from "../../types";
 import { ThreadSituationFormInputs } from "@/validations/threadSituationValidation";
 import { Button } from "@/components/ui/button";
+import { ThreadSituationUpdater } from "./ThreadSituationUpdater";
+import { ThreadMessagesPresentationDialog } from "./ThreadMessagesPresentationDialog";
 
 export const ThreadSituationEditCard = ({
+  projectId,
   threadSituation,
   mailThread,
+  isLatest,
 }: {
+  projectId: number;
   threadSituation: ThreadSituation;
   mailThread: MailThreadDTO;
+  isLatest: boolean;
 }) => {
   const { form } = useThreadSituationForm({
     notes: threadSituation.notes ?? "",
@@ -45,14 +51,30 @@ export const ThreadSituationEditCard = ({
               textClassName="w-full"
             />
           </div>
-          <Button
-            type="submit"
-            disabled={
-              isPending || !form.formState.isValid || !form.formState.isDirty
-            }
-          >
-            更新
-          </Button>
+          <div className="flex justify-start gap-2 items-center">
+            <Button
+              type="submit"
+              disabled={
+                isPending || !form.formState.isValid || !form.formState.isDirty
+              }
+            >
+              更新
+            </Button>
+            <ThreadMessagesPresentationDialog
+              thread={mailThread}
+              projectId={projectId}
+            />
+            {isLatest ? (
+              <div className="flex flex-col gap-2">
+                <p>最新のメールスレッドです</p>
+              </div>
+            ) : (
+              <ThreadSituationUpdater
+                threadSituation={threadSituation}
+                projectId={projectId}
+              />
+            )}
+          </div>
         </form>
       </Form>
     </CustomeCard>

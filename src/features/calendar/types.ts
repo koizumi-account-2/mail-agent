@@ -28,6 +28,7 @@ export type CalendarEvent = {
     start: EventTime;
     end: EventTime;
     recurrence: string | null;
+    event_tag: string | null;
 }
 
 
@@ -56,6 +57,7 @@ export type CandidateResult = {
 export type TentativeEvent = {
   candidate_days: CandidateDay[];
   thread_id: string;
+  project_id: number;
   travel_time_minutes: number;
   event_duration_minutes: number;
   event_name: string;

@@ -29,9 +29,7 @@ export const CustomeCard = ({
           <CardDescription>{description}</CardDescription>
         </CardHeader>
       )}
-      <CardContent className="flex-1 overflow-y-auto min-h-0">
-        {children}
-      </CardContent>
+      <CardContent className="overflow-y-auto min-h-0">{children}</CardContent>
       {footer && (
         <CardFooter className="shrink-0 border-t">{footer}</CardFooter>
       )}

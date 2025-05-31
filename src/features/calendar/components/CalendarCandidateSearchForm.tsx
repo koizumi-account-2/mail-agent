@@ -22,7 +22,17 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { useSearchCandidateForm } from "../hooks/useSearchCandidateForm";
 import { useWatch } from "react-hook-form";
 const defaultTab = "1";
-export const CalendarCandidateSearchForm = ({ skey }: { skey?: string }) => {
+export const CalendarCandidateSearchForm = ({
+  skey,
+  projectId,
+  threadId,
+  from,
+}: {
+  skey?: string;
+  projectId?: string;
+  threadId?: string;
+  from: string;
+}) => {
   const [editingSkey, setEditingSkey] = useState<string>(skey || "");
   const [selectedTab, setSelectedTab] = useState<string>(defaultTab);
   console.log("rendered", skey, editingSkey);
@@ -85,7 +95,7 @@ export const CalendarCandidateSearchForm = ({ skey }: { skey?: string }) => {
         }
       }
     },
-    [editingSkey, search, setEditingSkey, saveCandidateInfo, setSelectedTab]
+    [search, setEditingSkey, saveCandidateInfo, setSelectedTab]
   );
   const tabItems: TabItem[] = [
     {
@@ -117,6 +127,9 @@ export const CalendarCandidateSearchForm = ({ skey }: { skey?: string }) => {
           selectEventSlot={selectEventSlot}
           candidateDaysAll={candidateDaysAll}
           skey={editingSkey}
+          projectId={projectId}
+          threadId={threadId}
+          from={from}
         />
       ),
     },

@@ -22,7 +22,7 @@ export default function PublicLayout({
         <div className="sticky top-0 z-50 bg-white border-b">
           <SiteHeader />
         </div>
-        <div className="@container/main flex flex-1 flex-col overflow-y-auto">
+        <div className="@container/main overflow-y-auto">
           <div className="flex flex-col gap-2 p-2 md:gap-2 md:py-2 ">
             {children}
             <ConfirmDialog />

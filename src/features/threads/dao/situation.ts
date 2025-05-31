@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { ThreadSituation } from "../types";
+import { cache } from "react";
 
 
 // situationを作成
@@ -20,10 +21,11 @@ export async function insertThreadSituation( threadSituation: ThreadSituation) {
   return situation;
 }
 
-export async function getThreadSituation(
-  projectId: number,
-  threadId: string
-): Promise<ThreadSituation> {
+export const getThreadSituation = cache(
+  async (
+    projectId: number,
+    threadId: string
+  ): Promise<ThreadSituation> => {
   const threadSituation = await prisma.situation.findFirst({
     where: {
       projectId: projectId,
@@ -37,7 +39,6 @@ export async function getThreadSituation(
       updatedAt: "desc",
     },
   });
-  console.log("threadSituation", threadSituation);
 
 
 
@@ -52,14 +53,10 @@ export async function getThreadSituation(
   }
   return {
     ...threadSituation,
-    thread: {
-      ...threadSituation.thread,
-      messages: [],
-      threadId: threadSituation.threadId,
-    },
     notes: threadSituation.notes ?? "",
   }
-}
+  }
+);
 
 export async function getAllSituations() {
   const situations = await prisma.situation.findMany();

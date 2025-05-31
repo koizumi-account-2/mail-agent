@@ -6,6 +6,7 @@ type Params = {
 };
 
 export default async function ProjectPage({ params }: Params) {
+  console.log("ProjectPage");
   const resolvedParams = await params;
   const session = await auth();
   if (!session?.user?.email || !session?.accessToken) {

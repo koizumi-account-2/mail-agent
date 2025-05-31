@@ -1,12 +1,12 @@
 "use client";
-import { ThreadSituation, MailThreadDTO } from "../../types";
+import { ThreadSituation, MailThreadDTO } from "../../../types";
 import { Button } from "@/components/ui/button";
-import { analyzeMailMessages } from "../../actions/analyzeMailMessages";
-import { insertThreadSituation } from "../../dao/situation";
+import { analyzeMailMessages } from "../../../actions/analyzeMailMessages";
+import { insertThreadSituation } from "../../../dao/situation";
 import { useRouter } from "next/navigation";
 import { useState, useCallback } from "react";
 import { CustomeCard } from "@/components/common/CustomeCard";
-import { ThreadMessagesPresentationDialog } from "./ThreadMessagesPresentationDialog";
+import { ThreadMessagesPresentationDialog } from "../ThreadMessagesPresentationDialog";
 import { createTasks } from "@/features/task/dao/task";
 import { confirm } from "@/utils/confirm";
 import { HeaderGroupS } from "@/components/common/header/HeaderGroups";

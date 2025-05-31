@@ -2,6 +2,7 @@
 import { redirect } from "next/navigation"
 import { getSituationById,insertThreadSituation } from "../dao/situation"
 import { ThreadSituation } from "../types"
+import { revalidatePath } from "next/cache"
 type ActionState = {
     success: boolean,
     errors: Record<string, string[]>
@@ -29,5 +30,10 @@ export async function updateThreadSituation(
     }
     await insertThreadSituation(updatedSituation)
 
-    redirect(`/project/${threadSituation.projectId}/${threadSituation.threadId}/situation`)
+    revalidatePath(`/project/${threadSituation.projectId}/${threadSituation.threadId}/situation`)
+    //redirect(`/project/${threadSituation.projectId}/${threadSituation.threadId}/situation`)
+    return {
+        success: true,
+        errors: {}
+    }
 }

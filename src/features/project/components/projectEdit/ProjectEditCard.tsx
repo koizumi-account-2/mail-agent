@@ -21,9 +21,6 @@ export const ProjectEditCard = ({ project }: { project: ProjectDTO }) => {
     success: false,
     errors: {},
   });
-  const onSubmit = (data: ProjectInfoFormInputs) => {
-    console.log(data);
-  };
   return (
     <>
       <CustomeCard title="プロジェクト情報" description="">
@@ -57,16 +54,6 @@ export const ProjectEditCard = ({ project }: { project: ProjectDTO }) => {
           </form>
         </Form>
       </CustomeCard>
-      {/* TODO スレッド情報を表示する */}
-      {project.threads.map((thread) => (
-        <div key={thread.id}>
-          <Link href={`/project/${project.id}/${thread.id}/situation`}>
-            <Button variant="link">
-              {thread.subject || `スレッド名がありません:${thread.id}`}
-            </Button>
-          </Link>
-        </div>
-      ))}
     </>
   );
 };

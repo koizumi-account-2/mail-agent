@@ -20,6 +20,9 @@ export const TabCandidate = ({
   selectEventSlot,
   candidateDaysAll,
   skey,
+  projectId,
+  threadId,
+  from,
 }: {
   selectedCandidateDays: CandidateDay[];
   selectEventSlot: (
@@ -29,6 +32,9 @@ export const TabCandidate = ({
   ) => void;
   candidateDaysAll: CandidateDay[];
   skey: string;
+  projectId?: string;
+  threadId?: string;
+  from: string;
 }) => {
   const router = useRouter();
   const currentCandidateInfo = useAtomValue(candidateDaysSearchAtom).find(
@@ -48,7 +54,14 @@ export const TabCandidate = ({
       };
       // ここで、結果が保存される
       saveCandidateInfo(newCandidateInfo);
-      router.push(`/calendar/create?skey=${skey}`);
+      let url =
+        from === "mail"
+          ? `/mail/create?skey=${skey}&projectId=${projectId}`
+          : `/calendar/create?skey=${skey}`;
+      if (projectId && threadId) {
+        url = `/calendar/create?skey=${skey}&projectId=${projectId}&threadId=${threadId}`;
+      }
+      router.push(url);
     }
   };
   return (

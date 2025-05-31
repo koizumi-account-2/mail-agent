@@ -2,6 +2,7 @@
 import { auth } from "@/auth";
 import { createProject, updateProject } from "../dao/projectDao";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 
 type ActionState = {
@@ -37,5 +38,10 @@ export async function updateProjectAction(
   console.log("projectDescription", projectDescription);
   console.log("projectId", projectId);
   await updateProject(Number(projectId), projectName, projectDescription)
-  redirect(`/project/${projectId}`);
+  revalidatePath(`/project/${projectId}`);
+  //redirect(`/project/${projectId}`);
+  return {
+    success: true,
+    errors: {}
+  }
 }

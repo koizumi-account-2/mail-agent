@@ -35,6 +35,13 @@ export type ThreadSituation = {
   updatedAt?: Date;
 };
 
+
+export type MailDraft = {
+  subject: string;
+  body: string;
+  to: string;
+}
+
 ///fastapi
 
 export type AnalyzeMailMessagesResponse = {
@@ -53,4 +60,13 @@ export type TaskKari = {
 export type ContactPy = {
   company_name: string;
   company_address: string;
+};
+
+export type MailDraftResponse = {
+  id: string;
+  message: {
+    id: string;
+    threadId: string;
+    labelIds: string[];
+  };
 };

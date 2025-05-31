@@ -18,7 +18,7 @@ export default async function ProjectPage() {
         headerDescription="プロジェクトを作成して、自分のプロジェクトを管理しましょう。"
       />
       <Button>
-        <Link href={`/threads`}>新規作成</Link>
+        <Link href={`/project/create`}>新規作成</Link>
       </Button>
       <div className="grid auto-rows-min gap-4 md:grid-cols-2">
         {projects.map((project) => (

@@ -1,5 +1,5 @@
 "use client";
-import { createMail } from "@/lib/actions/createMail";
+import { createMailBodyOfCandidateDays } from "@/lib/actions/createMail";
 import React, { useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import { CandidateDayView } from "@/features/calendar/components/CandidateDayView";
@@ -17,11 +17,15 @@ import { InputWithLabel } from "@/components/common/input/InputWithLabel";
 type CalendarEventCreater = {
   skey: string;
   mode: "candidate" | "draft";
+  projectId?: number;
+  threadId?: string;
 };
 
 export const CalendarEventCreater = ({
   skey,
   mode = "candidate",
+  projectId,
+  threadId,
 }: CalendarEventCreater) => {
   const router = useRouter();
   console.log("candidateDaysSearchAtom", useAtomValue(candidateDaysSearchAtom));
@@ -38,9 +42,10 @@ export const CalendarEventCreater = ({
   const registerTentativeEvent = async (eventName: string) => {
     const tentativeEvent: TentativeEvent = {
       candidate_days: candidateInfo.candidateDays,
-      thread_id: skey,
+      thread_id: threadId ?? skey,
+      project_id: projectId ?? 0,
       travel_time_minutes: 30,
-      event_duration_minutes: candidateInfo.searchParams.durationMinutes,
+      event_duration_minutes: candidateInfo.searchParams?.durationMinutes ?? 60,
       event_name: eventName,
     };
     const res = await createTentativeEvents(tentativeEvent);

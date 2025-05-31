@@ -1,6 +1,5 @@
 import { auth } from "@/auth";
 import { ThreadSituationContainer } from "@/features/threads/components/situations/ThreadSituationContainer";
-import { use } from "react";
 type Params = {
   params: Promise<{ id: string; threadId: string }>;
 };
@@ -18,7 +17,11 @@ export default async function ThreadSituationPage({ params }: Params) {
   // その中では、threadの情報を表示する
   return (
     <>
-      <ThreadSituationContainer projectId={Number(id)} threadId={threadId} />
+      <ThreadSituationContainer
+        projectId={Number(id)}
+        threadId={threadId}
+        isReadOnly={false}
+      />
     </>
   );
 }
